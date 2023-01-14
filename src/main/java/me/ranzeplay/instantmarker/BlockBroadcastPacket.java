@@ -5,24 +5,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
-import java.io.*;
-
-public class BlockBroadcastPacket implements Serializable {
-    private final String playerName;
-    private final BlockPos targetPosition;
-
-    public BlockBroadcastPacket(String playerName, BlockPos targetPosition) {
-        this.playerName = playerName;
-        this.targetPosition = targetPosition;
-    }
-
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public BlockPos getTargetPosition() {
-        return targetPosition;
-    }
+public record BlockBroadcastPacket(String playerName, BlockPos targetPosition) {
 
     public PacketByteBuf toPacketByteBuf() {
         var buffer = PacketByteBufs.create();
