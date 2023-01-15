@@ -1,34 +1,36 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "instantmarker",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Instant marker",
+  "description": "Mark everything you see and broadcast to everyone! Haven't you played Apex Legends?",
   "authors": [
-    "Me!"
+    "Ranzeplay"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/Ranzeplay/InstantMarker",
+    "sources": "https://github.com/Ranzeplay/InstantMarker"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "license": "MIT",
+  "icon": "assets/instantmarker/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "me.ranzeplay.instantmarker.InstantMarker"
+    ],
+    "client": [
+      "me.ranzeplay.instantmarker.client.InstantMarkerClient"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "instantmarker.mixins.json"
   ],
 
   "depends": {
-    "fabricloader": ">=0.14.6",
-    "fabric": "*",
+    "fabricloader": ">=0.14.8",
     "minecraft": "~1.19",
     "java": ">=17"
   },
