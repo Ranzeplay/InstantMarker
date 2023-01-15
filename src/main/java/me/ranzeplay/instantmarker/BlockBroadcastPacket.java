@@ -15,6 +15,10 @@ public record BlockBroadcastPacket(String playerName, BlockPos targetPosition) {
         return buffer;
     }
 
+    public double getDistance(Vec3d source) {
+        return new Vec3d(targetPosition.getX(), targetPosition.getY(), targetPosition.getZ()).distanceTo(source);
+    }
+
     public static BlockBroadcastPacket fromPacketByteBuf(PacketByteBuf buffer) {
         var text = buffer.readText();
         var comp = text.getString().split(",");
@@ -26,14 +30,26 @@ public record BlockBroadcastPacket(String playerName, BlockPos targetPosition) {
         var playerNameText = Text.literal(playerName).formatted(Formatting.BOLD, Formatting.YELLOW);
         var locationText = Text.literal(String.format("(%d, %d, %d)", targetPosition.getX(), targetPosition.getY(), targetPosition.getZ())).formatted(Formatting.AQUA);
 
-        var distance = new Vec3d(targetPosition.getX(), targetPosition.getY(), targetPosition.getZ()).distanceTo(sourcePos);
-        var distanceText = Text.literal(String.format("(%.1fm)", distance)).formatted(Formatting.GREEN);
+        var distanceText = Text.literal(String.format("(%.1fm)", getDistance(sourcePos))).formatted(Formatting.GREEN);
 
         return Text.empty()
                 .append(playerNameText)
                 .append(" ")
                 .append(locationText)
                 .append(" ")
+                .append(distanceText);
+    }
+
+    public Text fullText(Vec3d sourcePos) {
+        var playerNameText = Text.literal(playerName).formatted(Formatting.BOLD, Formatting.YELLOW);
+        var locationText = Text.literal(String.format("(%d, %d, %d)", targetPosition.getX(), targetPosition.getY(), targetPosition.getZ())).formatted(Formatting.AQUA);
+
+        var distanceText = Text.literal(String.format(" : %.1fm", getDistance(sourcePos))).formatted(Formatting.GREEN);
+
+        return Text.empty()
+                .append(playerNameText)
+                .append(" suggested a position ")
+                .append(locationText)
                 .append(distanceText);
     }
 }

@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.BlockHitResult;
@@ -14,6 +15,9 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class PositionMarking {
     public static void MarkPosition() {
@@ -26,15 +30,18 @@ public class PositionMarking {
             var blockPos = ((BlockHitResult) hit).getBlockPos();
             var block = player.getWorld().getBlockState(blockPos).getBlock();
 
-            player.sendMessage(Text.of(String.format("Marked block at (%d, %d, %d), whose type is %s",
+            player.sendMessage(Text.literal(String.format("Marked a block at (%d, %d, %d), whose type is %s",
                     blockPos.getX(),
                     blockPos.getY(),
                     blockPos.getZ(),
                     Text.translatable(block.getTranslationKey()).getString())));
 
             var nearbyItems = player.getWorld().getEntitiesByClass(ItemEntity.class, Box.of(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()), 5, 3, 5), itemEntity -> true);
-            for(var item : nearbyItems) {
-                player.sendMessage(item.getDisplayName().copy().append(" x").append(String.valueOf(item.getStack().getCount())));
+            if (!nearbyItems.isEmpty()) {
+                player.sendMessage(Text.literal("Nearby items:").formatted(Formatting.AQUA));
+                for(var item : nearbyItems) {
+                    player.sendMessage(item.getDisplayName().copy().append(" x").append(String.valueOf(item.getStack().getCount())));
+                }
             }
 
             ClientPlayNetworking.send(InstantMarker.SUGGEST_LOCATION_ID, PacketByteBufs.create().writeBlockPos(blockPos));
@@ -43,36 +50,26 @@ public class PositionMarking {
 
             player.sendMessage(Text.of(String.format("Marked entity at (%.2f, %.2f, %.2f), whose type is %s", entity.getX(), entity.getY(), entity.getZ(), entity.getEntityName())));
         } else {
-            player.sendMessage(Text.of("Nothing found!"));
+            player.sendMessage(Text.of("Too far, try to mark a closer point?"));
         }
     }
 
     public static void ReceiveMarker(MinecraftClient client, PacketByteBuf buf) {
         var packetContent = BlockBroadcastPacket.fromPacketByteBuf(buf);
-        var playerName = packetContent.playerName();
-        var pos = packetContent.targetPosition();
 
         assert client.player != null;
-
-        var playerNameText = Text.literal(playerName).formatted(Formatting.BOLD, Formatting.YELLOW);
-        var locationText = Text.literal(String.format("(%d, %d, %d)", pos.getX(), pos.getY(), pos.getZ())).formatted(Formatting.AQUA);
-
-        var distance = new Vec3d(pos.getX(), pos.getY(), pos.getZ()).distanceTo(client.player.getPos());
-        var distanceText = Text.literal(String.format(" (%.1fm)", distance)).formatted(Formatting.GREEN);
-
-        client.player.sendMessage(Text.empty()
-                        .append(playerNameText)
-                        .append(" suggested a position ")
-                        .append(locationText)
-                        .append(distanceText),
-                true);
+        client.player.sendMessage(packetContent.fullText(client.player.getPos()), true);
+        client.worldRenderer.playSong(SoundEvents.ENTITY_ARROW_HIT_PLAYER, client.player.getBlockPos());
 
         // Save marker
         InstantMarkerClient.existingMarkers.add(packetContent);
 
         // Limit max markers
-        while (InstantMarkerClient.existingMarkers.size() > 5) {
+        while (InstantMarkerClient.existingMarkers.size() > 3) {
             InstantMarkerClient.existingMarkers.remove(0);
         }
+
+        // Remove duplicated
+        InstantMarkerClient.existingMarkers = new ArrayList<>(new HashSet<>(InstantMarkerClient.existingMarkers));
     }
 }

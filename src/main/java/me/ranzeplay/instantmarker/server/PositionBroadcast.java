@@ -5,8 +5,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+// import net.minecraft.sound.SoundCategory;
+// import net.minecraft.sound.SoundEvents;
 
 import static me.ranzeplay.instantmarker.InstantMarker.BROADCAST_LOCATION_ID;
 
@@ -19,7 +19,7 @@ public class PositionBroadcast {
         var packet = new BlockBroadcastPacket(sender.getDisplayName().getString(), buf.readBlockPos()).toPacketByteBuf();
 
         currentWorldPlayers.forEach((player) -> {
-            sender.getWorld().playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.PLAYERS, 0.5f, 0);
+            // sender.getWorld().playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.PLAYERS, 0.5f, 0);
 
             ServerPlayNetworking.send(player, BROADCAST_LOCATION_ID, packet);
         });
