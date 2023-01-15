@@ -5,12 +5,14 @@ import me.ranzeplay.instantmarker.InstantMarker;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
 public class PositionMarking {
@@ -29,6 +31,11 @@ public class PositionMarking {
                     blockPos.getY(),
                     blockPos.getZ(),
                     Text.translatable(block.getTranslationKey()).getString())));
+
+            var nearbyItems = player.getWorld().getEntitiesByClass(ItemEntity.class, Box.of(blockPos.toCenterPos(), 5, 3, 5), itemEntity -> true);
+            for(var item : nearbyItems) {
+                player.sendMessage(item.getDisplayName().copy().append(" x").append(String.valueOf(item.getStack().getCount())));
+            }
 
             ClientPlayNetworking.send(InstantMarker.SUGGEST_LOCATION_ID, PacketByteBufs.create().writeBlockPos(blockPos));
         } else if (hit.getType() == HitResult.Type.ENTITY) {
@@ -59,5 +66,13 @@ public class PositionMarking {
                         .append(locationText)
                         .append(distanceText),
                 true);
+
+        // Save marker
+        InstantMarkerClient.existingMarkers.add(packetContent);
+
+        // Limit max markers
+        while (InstantMarkerClient.existingMarkers.size() > 5) {
+            InstantMarkerClient.existingMarkers.remove(0);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package me.ranzeplay.instantmarker.client;
 
+import me.ranzeplay.instantmarker.BlockBroadcastPacket;
 import me.ranzeplay.instantmarker.InstantMarker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -9,8 +10,12 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
+
 public class InstantMarkerClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
+
+    public static ArrayList<BlockBroadcastPacket> existingMarkers = new ArrayList<>();
 
     @Override
     public void onInitializeClient() {
@@ -29,5 +34,7 @@ public class InstantMarkerClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(InstantMarker.BROADCAST_LOCATION_ID, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender)
                 -> PositionMarking.ReceiveMarker(minecraftClient, packetByteBuf));
+
+        // ClientTickEvents.END_CLIENT_TICK.register(MarkerRendering::drawEveryTick);
     }
 }
