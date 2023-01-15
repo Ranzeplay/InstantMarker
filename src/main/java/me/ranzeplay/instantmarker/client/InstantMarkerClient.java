@@ -5,6 +5,7 @@ import me.ranzeplay.instantmarker.InstantMarker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -34,6 +35,8 @@ public class InstantMarkerClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(InstantMarker.BROADCAST_LOCATION_ID, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender)
                 -> PositionMarking.ReceiveMarker(minecraftClient, packetByteBuf));
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> existingMarkers.clear());
 
         // ClientTickEvents.END_CLIENT_TICK.register(MarkerRendering::drawEveryTick);
     }
