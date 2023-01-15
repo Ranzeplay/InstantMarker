@@ -30,13 +30,17 @@ public class InstantMarkerClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyBinding.wasPressed()) {
                 PositionMarking.MarkPosition();
+                InstantMarker.LOGGER.debug("Marker key pressed");
             }
         });
 
         ClientPlayNetworking.registerGlobalReceiver(InstantMarker.BROADCAST_LOCATION_ID, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender)
                 -> PositionMarking.ReceiveMarker(minecraftClient, packetByteBuf));
 
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> existingMarkers.clear());
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            existingMarkers.clear();
+            InstantMarker.LOGGER.debug("Disconnecting from server, removing markers");
+        });
 
         // ClientTickEvents.END_CLIENT_TICK.register(MarkerRendering::drawEveryTick);
     }

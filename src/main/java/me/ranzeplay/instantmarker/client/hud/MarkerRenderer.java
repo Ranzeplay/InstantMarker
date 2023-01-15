@@ -13,12 +13,12 @@ public class MarkerRenderer {
         for (var marker : InstantMarkerClient.existingMarkers) {
             assert client.player != null;
 
-            textRenderer.draw(matrixStack, marker.shortText(client.player.getPos()), 15, y, RGB2Int((short) 255, (short) 255, (short) 255));
+            textRenderer.draw(matrixStack, marker.shortText(client.player.getPos()), 15, y, WhiteColor());
             y += lineHeight;
         }
     }
 
-    private static int RGB2Int(short r, short g, short b) {
-        return ((0xFF << 24)|(r << 16)|(g << 8)|b);
+    private static int WhiteColor() {
+        return ((0xFF << 24)|((short) 255 << 16)|((short) 255 << 8)| (short) 255);
     }
 }

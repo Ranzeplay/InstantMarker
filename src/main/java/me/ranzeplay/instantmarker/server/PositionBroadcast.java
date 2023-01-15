@@ -1,6 +1,7 @@
 package me.ranzeplay.instantmarker.server;
 
 import me.ranzeplay.instantmarker.BlockBroadcastPacket;
+import me.ranzeplay.instantmarker.InstantMarker;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -20,8 +21,9 @@ public class PositionBroadcast {
 
         currentWorldPlayers.forEach((player) -> {
             sender.getWorld().playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.PLAYERS);
-
             ServerPlayNetworking.send(player, BROADCAST_LOCATION_ID, packet);
+
+            InstantMarker.LOGGER.debug("Player " + player.getDisplayName().getString() + " has marked a position");
         });
     }
 }
