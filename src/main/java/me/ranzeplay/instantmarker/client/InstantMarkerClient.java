@@ -3,11 +3,11 @@ package me.ranzeplay.instantmarker.client;
 import me.ranzeplay.instantmarker.BlockBroadcastPacket;
 import me.ranzeplay.instantmarker.InstantMarker;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -39,7 +39,6 @@ public class InstantMarkerClient implements ClientModInitializer {
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> existingMarkers.clear());
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, commandRegistryAccess, registrationEnvironment)
-                -> ClientCommand.Register(dispatcher));
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> ClientCommand.Register(dispatcher));
     }
 }
