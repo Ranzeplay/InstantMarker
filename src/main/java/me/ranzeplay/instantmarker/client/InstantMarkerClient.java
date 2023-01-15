@@ -21,10 +21,10 @@ public class InstantMarkerClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.instantmarker.demokey",
+                "key.instantmarker.mark",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_Z,
-                "category.instantmarker.demokey"
+                "category.instantmarker.keys"
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

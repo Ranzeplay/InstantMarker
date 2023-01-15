@@ -44,12 +44,13 @@ public record BlockBroadcastPacket(String playerName, BlockPos targetPosition) {
         var playerNameText = Text.literal(playerName).formatted(Formatting.BOLD, Formatting.YELLOW);
         var locationText = Text.literal(String.format("(%d, %d, %d)", targetPosition.getX(), targetPosition.getY(), targetPosition.getZ())).formatted(Formatting.AQUA);
 
-        var distanceText = Text.literal(String.format(" : %.1fm", getDistance(sourcePos))).formatted(Formatting.GREEN);
+        var distanceText = Text.literal(String.format("%.1fm", getDistance(sourcePos))).formatted(Formatting.GREEN);
 
         return Text.empty()
                 .append(playerNameText)
-                .append(" suggested a position ")
+                .append(Text.translatable("text.instantmarker.suggest_position"))
                 .append(locationText)
+                .append(" : ")
                 .append(distanceText);
     }
 }

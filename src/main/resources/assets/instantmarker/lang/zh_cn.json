@@ -1,0 +1,13 @@
+{
+  "chat.instantmarker.nearby_items": "附近的物品",
+  "chat.instantmarker.mark_too_far": "标记距离过远，再近一点？",
+  "chat.instantmarker.marked_block_notification": "标记了方块 %s | 位置 (%.2f, %.2f, %.2f)",
+  "chat.instantmarker.marked_entity_notification": "标记了实体 %s | 位置 (%.2f, %.2f, %.2f)",
+  "text.instantmarker.suggest_position": "标记了一个位置",
+  "key.instantmarker.mark": "标记位置",
+  "category.instantmarker.keys": "Instant Marker",
+  "text.instantmarker.mark_block": "标记了方块 ",
+  "text.instantmarker.mark_entity": "标记了实体 ",
+  "text.instantmarker.separator": " | ",
+  "text.instantmarker.loc": "位置 "
+}

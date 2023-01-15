@@ -2,6 +2,7 @@ package me.ranzeplay.instantmarker.client;
 
 import me.ranzeplay.instantmarker.BlockBroadcastPacket;
 import me.ranzeplay.instantmarker.InstantMarker;
+import me.ranzeplay.instantmarker.Localization;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -30,15 +31,11 @@ public class PositionMarking {
             var blockPos = ((BlockHitResult) hit).getBlockPos();
             var block = player.getWorld().getBlockState(blockPos).getBlock();
 
-            player.sendMessage(Text.literal(String.format("Marked a block at (%d, %d, %d), whose type is %s",
-                    blockPos.getX(),
-                    blockPos.getY(),
-                    blockPos.getZ(),
-                    Text.translatable(block.getTranslationKey()).getString())));
+            player.sendMessage(Localization.SelfMarkBlock(block, blockPos));
 
             var nearbyItems = player.getWorld().getEntitiesByClass(ItemEntity.class, Box.of(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()), 5, 3, 5), itemEntity -> true);
             if (!nearbyItems.isEmpty()) {
-                player.sendMessage(Text.literal("Nearby items:").formatted(Formatting.AQUA));
+                player.sendMessage(Text.translatable("chat.instantmarker.nearby_items").formatted(Formatting.AQUA));
                 for(var item : nearbyItems) {
                     player.sendMessage(item.getDisplayName().copy().append(" x").append(String.valueOf(item.getStack().getCount())));
                 }
@@ -48,9 +45,9 @@ public class PositionMarking {
         } else if (hit.getType() == HitResult.Type.ENTITY) {
             var entity = ((EntityHitResult) hit).getEntity();
 
-            player.sendMessage(Text.of(String.format("Marked entity at (%.2f, %.2f, %.2f), whose type is %s", entity.getX(), entity.getY(), entity.getZ(), entity.getEntityName())));
+            player.sendMessage(Localization.SelfMarkEntity(entity));
         } else {
-            player.sendMessage(Text.of("Too far, try to mark a closer point?"));
+            player.sendMessage(Text.translatable("chat.instantmarker.mark_too_far").formatted(Formatting.RED));
         }
     }
 
