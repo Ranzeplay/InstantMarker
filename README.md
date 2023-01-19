@@ -47,6 +47,14 @@ To enable/disable sound notification when someone (include yourself) marks a pos
 /im sound
 ```
 
+#### Local mode
+
+To share or disable sharing your markers to others, use the following command
+
+```
+/im local
+```
+
 
 
 ## License
