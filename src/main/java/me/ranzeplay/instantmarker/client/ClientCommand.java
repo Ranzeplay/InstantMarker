@@ -15,7 +15,8 @@ import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 public class ClientCommand {
     public static void Register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(ClientCommandManager.literal("im")
-                .then(ClientCommandManager.literal("clear").executes(ClientCommand::ClearMarkers))
+                .then(ClientCommandManager.literal("clear")
+                        .executes(ClientCommand::ClearMarkers))
                 .then(ClientCommandManager.literal("mute")
                         .then(ClientCommandManager.argument("player", StringArgumentType.word())
                                 .suggests(PlayerManager::getOnlinePlayers)
@@ -23,7 +24,21 @@ public class ClientCommand {
                 .then(ClientCommandManager.literal("unmute")
                         .then(ClientCommandManager.argument("player", StringArgumentType.word())
                                 .suggests((context, builder) -> PlayerManager.getMutedPlayers(builder))
-                                .executes(ClientCommand::UnmutePlayer))));
+                                .executes(ClientCommand::UnmutePlayer)))
+                .then(ClientCommandManager.literal("local")
+                        .executes(ClientCommand::SwitchLocalMode)));
+    }
+
+    private static int SwitchLocalMode(CommandContext<FabricClientCommandSource> context) {
+        InstantMarkerClient.localMode = !InstantMarkerClient.localMode;
+
+        if(InstantMarkerClient.localMode) {
+            context.getSource().sendFeedback(Text.translatable("text.instantmarker.local_mode_on").formatted(Formatting.YELLOW));
+        } else {
+            context.getSource().sendFeedback(Text.translatable("text.instantmarker.local_mode_off").formatted(Formatting.YELLOW));
+        }
+
+        return 1;
     }
 
 

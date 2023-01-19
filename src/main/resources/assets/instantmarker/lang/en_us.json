@@ -15,5 +15,7 @@
   "text.instantmarker.markers_cleared": "Markers cleared!",
   "text.instantmarker.player_not_found": "Player not found",
   "text.instantmarker.player_unmute": " has been unmuted!",
-  "text.instantmarker.player_mute": " has been muted!"
+  "text.instantmarker.player_mute": " has been muted!",
+  "text.instantmarker.local_mode_off": "Local mode disabled!",
+  "text.instantmarker.local_mode_on": "Local mode enabled!"
 }

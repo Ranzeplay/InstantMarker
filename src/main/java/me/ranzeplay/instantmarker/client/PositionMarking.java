@@ -44,8 +44,13 @@ public class PositionMarking {
 
             var packet = new BlockBroadcastPacket(player.getDisplayName().getString(), new BroadcastBlockPos(blockPos), transformedNearbyItems);
             var json = packet.toJsonString();
-            InstantMarker.LOGGER.debug(json);
-            ClientPlayNetworking.send(InstantMarker.SUGGEST_LOCATION_ID, PacketByteBufs.create().writeString(json));
+            // InstantMarker.LOGGER.debug(json);
+            if (InstantMarkerClient.localMode) {
+                // Send internally when local mode enabled
+                ReceiveMarker(MinecraftClient.getInstance(), PacketByteBufs.create().writeText(Text.of(json)));
+            } else {
+                ClientPlayNetworking.send(InstantMarker.SUGGEST_LOCATION_ID, PacketByteBufs.create().writeString(json));
+            }
         } else if (hit.getType() == HitResult.Type.ENTITY) {
             var entity = ((EntityHitResult) hit).getEntity();
 
@@ -57,14 +62,14 @@ public class PositionMarking {
 
     public static void ReceiveMarker(MinecraftClient client, PacketByteBuf buf) {
         var packetContent = BlockBroadcastPacket.fromPacketByteBuf(buf);
-        // InstantMarker.LOGGER.debug(buf.readString());
 
         var player = client.player;
         assert player != null;
-        if(!InstantMarkerClient.mutedPlayers.contains(player.getName().getString())) {
+        if (!InstantMarkerClient.mutedPlayers.contains(player.getName().getString())) {
             player.sendMessage(packetContent.fullText(client.player.getPos()), true);
             client.worldRenderer.playSong(SoundEvents.ENTITY_ARROW_HIT_PLAYER, client.player.getBlockPos().up(5));
 
+            // Show nearby items
             var nearbyItems = packetContent.getNearbyItems();
             if (!nearbyItems.isEmpty()) {
                 player.sendMessage(Text.translatable("chat.instantmarker.nearby_items").formatted(Formatting.AQUA));

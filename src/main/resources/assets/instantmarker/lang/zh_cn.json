@@ -15,5 +15,7 @@
   "text.instantmarker.markers_cleared": "已清除所有标记",
   "text.instantmarker.player_not_found": "未找到该玩家",
   "text.instantmarker.player_mute": " 已静音",
-  "text.instantmarker.player_unmute": " 已解除静音"
+  "text.instantmarker.player_unmute": " 已解除静音",
+  "text.instantmarker.local_mode_off": "本地模式开启",
+  "text.instantmarker.local_mode_on": "本地模式关闭"
 }

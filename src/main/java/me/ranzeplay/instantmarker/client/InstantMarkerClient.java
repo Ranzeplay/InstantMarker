@@ -20,6 +20,7 @@ public class InstantMarkerClient implements ClientModInitializer {
 
     public static ArrayList<BlockBroadcastPacket> existingMarkers = new ArrayList<>();
     public static HashSet<String> mutedPlayers = new HashSet<>();
+    public static boolean localMode = false;
 
     @Override
     public void onInitializeClient() {
