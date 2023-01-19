@@ -13,12 +13,13 @@ import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class InstantMarkerClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
 
     public static ArrayList<BlockBroadcastPacket> existingMarkers = new ArrayList<>();
-    public static ArrayList<String> mutedPlayers = new ArrayList<>();
+    public static HashSet<String> mutedPlayers = new HashSet<>();
 
     @Override
     public void onInitializeClient() {
