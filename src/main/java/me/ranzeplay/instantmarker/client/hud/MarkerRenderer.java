@@ -7,12 +7,12 @@ import net.minecraft.client.util.math.MatrixStack;
 public class MarkerRenderer {
     public static void drawEveryTick(MinecraftClient client, MatrixStack matrixStack) {
         var textRenderer = client.textRenderer;
-        final int lineHeight = textRenderer.fontHeight + 1;
+        final float lineHeight = textRenderer.fontHeight + 0.7f;
 
         matrixStack.push();
 
         // Dock to lower left
-        int y = client.getWindow().getScaledHeight() - lineHeight;
+        float y = client.getWindow().getScaledHeight() - lineHeight;
         for (var marker : InstantMarkerClient.existingMarkers) {
             assert client.player != null;
 
