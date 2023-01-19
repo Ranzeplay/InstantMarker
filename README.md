@@ -39,6 +39,16 @@ To unmute a player, type this command and he/she would be removed from ignore li
 /im unmute <playerName>
 ```
 
+#### Sound settings
+
+To enable/disable sound notification when someone (include yourself) marks a position, type the following command
+
+```
+/im sound
+```
+
+
+
 ## License
 
 This project is licensed under MIT License. You can view it in LICENSE in root directory.
