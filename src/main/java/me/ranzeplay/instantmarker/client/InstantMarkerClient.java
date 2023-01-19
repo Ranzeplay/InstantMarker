@@ -1,6 +1,6 @@
 package me.ranzeplay.instantmarker.client;
 
-import me.ranzeplay.instantmarker.BlockBroadcastPacket;
+import me.ranzeplay.instantmarker.models.BlockBroadcastPacket;
 import me.ranzeplay.instantmarker.InstantMarker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -38,7 +38,6 @@ public class InstantMarkerClient implements ClientModInitializer {
                 -> PositionMarking.ReceiveMarker(minecraftClient, packetByteBuf));
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> existingMarkers.clear());
-
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> ClientCommand.Register(dispatcher));
     }
 }

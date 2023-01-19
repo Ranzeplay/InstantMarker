@@ -1,17 +1,23 @@
-package me.ranzeplay.instantmarker;
+package me.ranzeplay.instantmarker.models;
 
+import com.google.gson.Gson;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-public record BlockBroadcastPacket(String playerName, BlockPos targetPosition) {
+import java.util.ArrayList;
+import java.util.List;
+
+public class BlockBroadcastPacket {
+    private String playerName;
+    private BroadcastBlockPos targetPosition;
+    private List<BroadcastItem> nearbyItems;
 
     public PacketByteBuf toPacketByteBuf() {
         var buffer = PacketByteBufs.create();
-        buffer.writeText(Text.of(playerName + "," + targetPosition.getX() + "," + targetPosition.getY() + "," + targetPosition.getZ()));
+        buffer.writeText(Text.literal(this.toJsonString()));
         return buffer;
     }
 
@@ -20,10 +26,8 @@ public record BlockBroadcastPacket(String playerName, BlockPos targetPosition) {
     }
 
     public static BlockBroadcastPacket fromPacketByteBuf(PacketByteBuf buffer) {
-        var text = buffer.readText();
-        var comp = text.getString().split(",");
-
-        return new BlockBroadcastPacket(comp[0], new BlockPos(Integer.parseInt(comp[1]), Integer.parseInt(comp[2]), Integer.parseInt(comp[3])));
+        var text = buffer.readText().getString();
+        return fromJsonString(text);
     }
 
     public Text shortText(Vec3d sourcePos) {
@@ -52,5 +56,32 @@ public record BlockBroadcastPacket(String playerName, BlockPos targetPosition) {
                 .append(locationText)
                 .append(" : ")
                 .append(distanceText);
+    }
+
+    public String toJsonString() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    public BlockBroadcastPacket(String playerName, BroadcastBlockPos targetPosition, ArrayList<BroadcastItem> nearbyItems) {
+        this.playerName = playerName;
+        this.targetPosition = targetPosition;
+        this.nearbyItems = nearbyItems;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public BroadcastBlockPos getTargetPosition() {
+        return targetPosition;
+    }
+
+    public List<BroadcastItem> getNearbyItems() {
+        return nearbyItems;
+    }
+
+    public static BlockBroadcastPacket fromJsonString(String json) {
+        return new Gson().fromJson(json, BlockBroadcastPacket.class);
     }
 }

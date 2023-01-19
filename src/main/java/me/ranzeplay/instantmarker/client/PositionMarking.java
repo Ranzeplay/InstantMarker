@@ -1,8 +1,10 @@
 package me.ranzeplay.instantmarker.client;
 
-import me.ranzeplay.instantmarker.BlockBroadcastPacket;
+import me.ranzeplay.instantmarker.models.BlockBroadcastPacket;
 import me.ranzeplay.instantmarker.InstantMarker;
 import me.ranzeplay.instantmarker.Localization;
+import me.ranzeplay.instantmarker.models.BroadcastBlockPos;
+import me.ranzeplay.instantmarker.models.BroadcastItem;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -33,15 +35,17 @@ public class PositionMarking {
 
             player.sendMessage(Localization.SelfMarkBlock(block, blockPos));
 
+            // Get nearby items
             var nearbyItems = player.getWorld().getEntitiesByClass(ItemEntity.class, Box.of(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()), 5, 3, 5), itemEntity -> true);
-            if (!nearbyItems.isEmpty()) {
-                player.sendMessage(Text.translatable("chat.instantmarker.nearby_items").formatted(Formatting.AQUA));
-                for(var item : nearbyItems) {
-                    player.sendMessage(item.getDisplayName().copy().append(" x").append(String.valueOf(item.getStack().getCount())));
-                }
+            ArrayList<BroadcastItem> transformedNearbyItems = new ArrayList<>();
+            for (var item : nearbyItems) {
+                transformedNearbyItems.add(new BroadcastItem(item.getStack().getTranslationKey(), item.getStack().getCount()));
             }
 
-            ClientPlayNetworking.send(InstantMarker.SUGGEST_LOCATION_ID, PacketByteBufs.create().writeBlockPos(blockPos));
+            var packet = new BlockBroadcastPacket(player.getDisplayName().getString(), new BroadcastBlockPos(blockPos), transformedNearbyItems);
+            var json = packet.toJsonString();
+            InstantMarker.LOGGER.debug(json);
+            ClientPlayNetworking.send(InstantMarker.SUGGEST_LOCATION_ID, PacketByteBufs.create().writeString(json));
         } else if (hit.getType() == HitResult.Type.ENTITY) {
             var entity = ((EntityHitResult) hit).getEntity();
 
@@ -53,10 +57,21 @@ public class PositionMarking {
 
     public static void ReceiveMarker(MinecraftClient client, PacketByteBuf buf) {
         var packetContent = BlockBroadcastPacket.fromPacketByteBuf(buf);
+        // InstantMarker.LOGGER.debug(buf.readString());
 
-        assert client.player != null;
-        client.player.sendMessage(packetContent.fullText(client.player.getPos()), true);
+        var player = client.player;
+        assert player != null;
+        player.sendMessage(packetContent.fullText(client.player.getPos()), true);
         client.worldRenderer.playSong(SoundEvents.ENTITY_ARROW_HIT_PLAYER, client.player.getBlockPos());
+
+        var nearbyItems = packetContent.getNearbyItems();
+        if (!nearbyItems.isEmpty()) {
+            player.sendMessage(Text.translatable("chat.instantmarker.nearby_items").formatted(Formatting.AQUA));
+            for (var item : nearbyItems) {
+                var translatedBlockName = Text.translatable(item.getTranslationKey());
+                player.sendMessage(translatedBlockName.append(" x").append(String.valueOf(item.getCount())));
+            }
+        }
 
         // Save marker
         InstantMarkerClient.existingMarkers.add(packetContent);

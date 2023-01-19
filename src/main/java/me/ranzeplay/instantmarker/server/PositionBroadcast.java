@@ -1,7 +1,8 @@
 package me.ranzeplay.instantmarker.server;
 
-import me.ranzeplay.instantmarker.BlockBroadcastPacket;
+import com.google.gson.Gson;
 import me.ranzeplay.instantmarker.InstantMarker;
+import me.ranzeplay.instantmarker.models.BlockBroadcastPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -15,11 +16,11 @@ public class PositionBroadcast {
         // Remove players not in this world
         currentWorldPlayers.removeIf(p -> p.getWorld() != sender.getWorld());
 
-        var packet = new BlockBroadcastPacket(sender.getDisplayName().getString(), buf.readBlockPos()).toPacketByteBuf();
+        var originalBuffer = new Gson().fromJson(buf.readString(), BlockBroadcastPacket.class);
 
         currentWorldPlayers.forEach((player) -> {
             InstantMarker.LOGGER.debug(player.getName().getString() + " has just broadcast his/her location");
-            ServerPlayNetworking.send(player, BROADCAST_LOCATION_ID, packet);
+            ServerPlayNetworking.send(player, BROADCAST_LOCATION_ID, originalBuffer.toPacketByteBuf());
         });
     }
 }
