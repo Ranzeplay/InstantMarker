@@ -18,6 +18,7 @@ public class InstantMarkerClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
 
     public static ArrayList<BlockBroadcastPacket> existingMarkers = new ArrayList<>();
+    public static ArrayList<String> mutedPlayers = new ArrayList<>();
 
     @Override
     public void onInitializeClient() {
@@ -37,7 +38,10 @@ public class InstantMarkerClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(InstantMarker.BROADCAST_LOCATION_ID, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender)
                 -> PositionMarking.ReceiveMarker(minecraftClient, packetByteBuf));
 
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> existingMarkers.clear());
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            existingMarkers.clear();
+            mutedPlayers.clear();
+        });
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> ClientCommand.Register(dispatcher));
     }
 }

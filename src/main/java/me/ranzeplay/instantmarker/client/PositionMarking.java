@@ -61,27 +61,29 @@ public class PositionMarking {
 
         var player = client.player;
         assert player != null;
-        player.sendMessage(packetContent.fullText(client.player.getPos()), true);
-        client.worldRenderer.playSong(SoundEvents.ENTITY_ARROW_HIT_PLAYER, client.player.getBlockPos());
+        if(!InstantMarkerClient.mutedPlayers.contains(player.getName().getString())) {
+            player.sendMessage(packetContent.fullText(client.player.getPos()), true);
+            client.worldRenderer.playSong(SoundEvents.ENTITY_ARROW_HIT_PLAYER, client.player.getBlockPos().up(5));
 
-        var nearbyItems = packetContent.getNearbyItems();
-        if (!nearbyItems.isEmpty()) {
-            player.sendMessage(Text.translatable("chat.instantmarker.nearby_items").formatted(Formatting.AQUA));
-            for (var item : nearbyItems) {
-                var translatedBlockName = Text.translatable(item.getTranslationKey());
-                player.sendMessage(translatedBlockName.append(" x").append(String.valueOf(item.getCount())));
+            var nearbyItems = packetContent.getNearbyItems();
+            if (!nearbyItems.isEmpty()) {
+                player.sendMessage(Text.translatable("chat.instantmarker.nearby_items").formatted(Formatting.AQUA));
+                for (var item : nearbyItems) {
+                    var translatedBlockName = Text.translatable(item.getTranslationKey());
+                    player.sendMessage(translatedBlockName.append(" x").append(String.valueOf(item.getCount())));
+                }
             }
+
+            // Save marker
+            InstantMarkerClient.existingMarkers.add(packetContent);
+
+            // Limit max markers
+            while (InstantMarkerClient.existingMarkers.size() > 3) {
+                InstantMarkerClient.existingMarkers.remove(0);
+            }
+
+            // Remove duplicated
+            InstantMarkerClient.existingMarkers = new ArrayList<>(new HashSet<>(InstantMarkerClient.existingMarkers));
         }
-
-        // Save marker
-        InstantMarkerClient.existingMarkers.add(packetContent);
-
-        // Limit max markers
-        while (InstantMarkerClient.existingMarkers.size() > 3) {
-            InstantMarkerClient.existingMarkers.remove(0);
-        }
-
-        // Remove duplicated
-        InstantMarkerClient.existingMarkers = new ArrayList<>(new HashSet<>(InstantMarkerClient.existingMarkers));
     }
 }
