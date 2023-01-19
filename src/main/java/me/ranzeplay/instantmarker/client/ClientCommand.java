@@ -26,7 +26,21 @@ public class ClientCommand {
                                 .suggests((context, builder) -> PlayerManager.getMutedPlayers(builder))
                                 .executes(ClientCommand::UnmutePlayer)))
                 .then(ClientCommandManager.literal("local")
-                        .executes(ClientCommand::SwitchLocalMode)));
+                        .executes(ClientCommand::SwitchLocalMode))
+                .then(ClientCommandManager.literal("sound")
+                        .executes(ClientCommand::SwitchSound)));
+    }
+
+    private static int SwitchSound(CommandContext<FabricClientCommandSource> context) {
+        InstantMarkerClient.enableSound = !InstantMarkerClient.enableSound;
+
+        if(InstantMarkerClient.enableSound) {
+            context.getSource().sendFeedback(Text.translatable("text.instantmarker.sound_on").formatted(Formatting.YELLOW));
+        } else {
+            context.getSource().sendFeedback(Text.translatable("text.instantmarker.sound_off").formatted(Formatting.YELLOW));
+        }
+
+        return 1;
     }
 
     private static int SwitchLocalMode(CommandContext<FabricClientCommandSource> context) {

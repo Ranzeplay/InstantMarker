@@ -20,7 +20,12 @@ public class InstantMarkerClient implements ClientModInitializer {
 
     public static ArrayList<BlockBroadcastPacket> existingMarkers = new ArrayList<>();
     public static HashSet<String> mutedPlayers = new HashSet<>();
+
+    // Prevent sharing markers to others while playing in multiplayer server
     public static boolean localMode = false;
+
+    // Enable a ding sound on marking position
+    public static boolean enableSound = true;
 
     @Override
     public void onInitializeClient() {
@@ -43,6 +48,8 @@ public class InstantMarkerClient implements ClientModInitializer {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             existingMarkers.clear();
             mutedPlayers.clear();
+            localMode = false;
+            enableSound = true;
         });
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> ClientCommand.Register(dispatcher));
     }

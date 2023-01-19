@@ -67,7 +67,11 @@ public class PositionMarking {
         assert player != null;
         if (!InstantMarkerClient.mutedPlayers.contains(player.getName().getString())) {
             player.sendMessage(packetContent.fullText(client.player.getPos()), true);
-            client.worldRenderer.playSong(SoundEvents.ENTITY_ARROW_HIT_PLAYER, client.player.getBlockPos().up(5));
+
+            // Play sound if player allows
+            if (InstantMarkerClient.enableSound) {
+                client.worldRenderer.playSong(SoundEvents.ENTITY_ARROW_HIT_PLAYER, client.player.getBlockPos().up(5));
+            }
 
             // Show nearby items
             var nearbyItems = packetContent.getNearbyItems();
