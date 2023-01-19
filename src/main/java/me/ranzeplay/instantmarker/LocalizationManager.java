@@ -6,7 +6,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
-public class Localization {
+public class LocalizationManager {
     public static Text SelfMarkBlock(Block block, BlockPos pos) {
         return Text.empty()
                 .append(Text.translatable("text.instantmarker.mark_block"))

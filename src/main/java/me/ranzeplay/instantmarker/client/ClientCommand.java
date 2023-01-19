@@ -27,44 +27,55 @@ public class ClientCommand {
     }
 
 
-
     private static int ClearMarkers(CommandContext<FabricClientCommandSource> context) {
         InstantMarkerClient.existingMarkers.clear();
-        context.getSource().sendFeedback(Text.literal("Markers cleared!").formatted(Formatting.GREEN));
+        context.getSource().sendFeedback(Text.translatable("text.instantmarker.markers_cleared").formatted(Formatting.GREEN));
         return 1;
     }
 
     public static int MutePlayer(CommandContext<FabricClientCommandSource> context) {
         var playerName = getString(context, "player");
 
-        if(playerName.equals("@a")) {
+        if (playerName.equals("@a")) {
             InstantMarkerClient.mutedPlayers.addAll(new LinkedHashSet<>(context.getSource().getPlayerNames()));
             return 1;
         }
 
-        if(InstantMarkerClient.mutedPlayers.contains(playerName)) {
-            context.getSource().sendError(Text.literal("You have already muted " + playerName).formatted(Formatting.RED));
+        // Show an error if the player has already muted
+        if (InstantMarkerClient.mutedPlayers.contains(playerName)) {
+            context.getSource().sendError(Text.literal(playerName)
+                    .append(Text.translatable("text.instantmarker.already_muted"))
+                    .formatted(Formatting.RED));
             return 0;
         }
 
         InstantMarkerClient.mutedPlayers.add(playerName);
+        context.getSource().sendFeedback(Text.literal(playerName)
+                .append(Text.translatable("text.instantmarker.player_mute"))
+                .formatted(Formatting.GREEN));
         return 1;
     }
 
     private static int UnmutePlayer(CommandContext<FabricClientCommandSource> context) {
         var playerName = getString(context, "player");
 
-        if(playerName.equals("@a")) {
+        if (playerName.equals("@a")) {
             InstantMarkerClient.mutedPlayers.clear();
             return 1;
         }
 
-        if(!InstantMarkerClient.mutedPlayers.contains(playerName)) {
-            context.getSource().sendError(Text.literal(playerName + " is not in the list").formatted(Formatting.RED));
+        // Show an error if the player hasn't muted
+        if (!InstantMarkerClient.mutedPlayers.contains(playerName)) {
+            context.getSource().sendError(Text.literal(playerName)
+                    .append(Text.translatable("text.instantmarker.not_muted"))
+                    .formatted(Formatting.RED));
             return 0;
         }
 
         InstantMarkerClient.mutedPlayers.remove(playerName);
+        context.getSource().sendFeedback(Text.literal(playerName)
+                .append(Text.translatable("text.instantmarker.player_unmute"))
+                .formatted(Formatting.GREEN));
         return 1;
     }
 }

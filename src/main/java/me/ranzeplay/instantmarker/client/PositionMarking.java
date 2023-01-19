@@ -2,7 +2,7 @@ package me.ranzeplay.instantmarker.client;
 
 import me.ranzeplay.instantmarker.models.BlockBroadcastPacket;
 import me.ranzeplay.instantmarker.InstantMarker;
-import me.ranzeplay.instantmarker.Localization;
+import me.ranzeplay.instantmarker.LocalizationManager;
 import me.ranzeplay.instantmarker.models.BroadcastBlockPos;
 import me.ranzeplay.instantmarker.models.BroadcastItem;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -33,7 +33,7 @@ public class PositionMarking {
             var blockPos = ((BlockHitResult) hit).getBlockPos();
             var block = player.getWorld().getBlockState(blockPos).getBlock();
 
-            player.sendMessage(Localization.SelfMarkBlock(block, blockPos));
+            player.sendMessage(LocalizationManager.SelfMarkBlock(block, blockPos));
 
             // Get nearby items
             var nearbyItems = player.getWorld().getEntitiesByClass(ItemEntity.class, Box.of(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()), 5, 3, 5), itemEntity -> true);
@@ -49,7 +49,7 @@ public class PositionMarking {
         } else if (hit.getType() == HitResult.Type.ENTITY) {
             var entity = ((EntityHitResult) hit).getEntity();
 
-            player.sendMessage(Localization.SelfMarkEntity(entity));
+            player.sendMessage(LocalizationManager.SelfMarkEntity(entity));
         } else {
             player.sendMessage(Text.translatable("chat.instantmarker.mark_too_far").formatted(Formatting.RED));
         }

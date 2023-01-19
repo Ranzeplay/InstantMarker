@@ -9,5 +9,11 @@
   "text.instantmarker.mark_block": "Marked block ",
   "text.instantmarker.mark_entity": "Marked entity ",
   "text.instantmarker.separator": " | ",
-  "text.instantmarker.loc": "Loc "
+  "text.instantmarker.loc": "Loc ",
+  "text.instantmarker.already_muted": " has already muted!",
+  "text.instantmarker.not_muted": " isn't in the list",
+  "text.instantmarker.markers_cleared": "Markers cleared!",
+  "text.instantmarker.player_not_found": "Player not found",
+  "text.instantmarker.player_unmute": " has been unmuted!",
+  "text.instantmarker.player_mute": " has been muted!"
 }

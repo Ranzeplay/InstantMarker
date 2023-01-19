@@ -9,5 +9,11 @@
   "text.instantmarker.mark_block": "标记了方块 ",
   "text.instantmarker.mark_entity": "标记了实体 ",
   "text.instantmarker.separator": " | ",
-  "text.instantmarker.loc": "位置 "
+  "text.instantmarker.loc": "位置 ",
+  "text.instantmarker.already_muted": " 已经静音",
+  "text.instantmarker.not_muted": " 不在静音列表中",
+  "text.instantmarker.markers_cleared": "已清除所有标记",
+  "text.instantmarker.player_not_found": "未找到该玩家",
+  "text.instantmarker.player_mute": " 已静音",
+  "text.instantmarker.player_unmute": " 已解除静音"
 }
