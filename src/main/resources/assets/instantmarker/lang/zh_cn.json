@@ -19,5 +19,7 @@
   "text.instantmarker.local_mode_off": "本地模式开启",
   "text.instantmarker.local_mode_on": "本地模式关闭",
   "text.instantmarker.sound_off": "提示音已关闭",
-  "text.instantmarker.sound_on": "提示音已开启"
+  "text.instantmarker.sound_on": "提示音已开启",
+  "text.instantmarker.share_items_on": "开启物品分享",
+  "text.instantmarker.share_items_off": "关闭物品分享"
 }

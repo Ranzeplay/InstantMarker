@@ -27,6 +27,9 @@ public class InstantMarkerClient implements ClientModInitializer {
     // Enable a ding sound on marking position
     public static boolean enableSound = true;
 
+    // Share nearby items of your marker to others
+    public static boolean shareItems = true;
+
     @Override
     public void onInitializeClient() {
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -50,6 +53,7 @@ public class InstantMarkerClient implements ClientModInitializer {
             mutedPlayers.clear();
             localMode = false;
             enableSound = true;
+            shareItems = true;
         });
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> ClientCommand.Register(dispatcher));
     }

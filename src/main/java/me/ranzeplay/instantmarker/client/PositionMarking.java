@@ -38,8 +38,11 @@ public class PositionMarking {
             // Get nearby items
             var nearbyItems = player.getWorld().getEntitiesByClass(ItemEntity.class, Box.of(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()), 5, 3, 5), itemEntity -> true);
             ArrayList<BroadcastItem> transformedNearbyItems = new ArrayList<>();
-            for (var item : nearbyItems) {
-                transformedNearbyItems.add(new BroadcastItem(item.getStack().getTranslationKey(), item.getStack().getCount()));
+            // Add nearby items when it enabled
+            if (InstantMarkerClient.shareItems) {
+                for (var item : nearbyItems) {
+                    transformedNearbyItems.add(new BroadcastItem(item.getStack().getTranslationKey(), item.getStack().getCount()));
+                }
             }
 
             var packet = new BlockBroadcastPacket(player.getDisplayName().getString(), new BroadcastBlockPos(blockPos), transformedNearbyItems);
@@ -76,7 +79,7 @@ public class PositionMarking {
             // Show nearby items
             var nearbyItems = packetContent.getNearbyItems();
             if (!nearbyItems.isEmpty()) {
-                player.sendMessage(Text.translatable("chat.instantmarker.nearby_items").formatted(Formatting.AQUA));
+                player.sendMessage(Text.translatable("chat.instantmarker.nearby_items").formatted(Formatting.BOLD, Formatting.AQUA));
                 for (var item : nearbyItems) {
                     var translatedBlockName = Text.translatable(item.getTranslationKey());
                     player.sendMessage(translatedBlockName.append(" x").append(String.valueOf(item.getCount())));

@@ -19,5 +19,7 @@
   "text.instantmarker.local_mode_off": "Local mode disabled!",
   "text.instantmarker.local_mode_on": "Local mode enabled!",
   "text.instantmarker.sound_off": "Sound disabled!",
-  "text.instantmarker.sound_on": "Sound enabled!"
+  "text.instantmarker.sound_on": "Sound enabled!",
+  "text.instantmarker.share_items_on": "Start sharing items",
+  "text.instantmarker.share_items_off": "Stop sharing items"
 }

@@ -28,7 +28,22 @@ public class ClientCommand {
                 .then(ClientCommandManager.literal("local")
                         .executes(ClientCommand::SwitchLocalMode))
                 .then(ClientCommandManager.literal("sound")
-                        .executes(ClientCommand::SwitchSound)));
+                        .executes(ClientCommand::SwitchSound))
+                .then(ClientCommandManager.literal("share")
+                        .then(ClientCommandManager.literal("items")
+                                .executes(ClientCommand::SwitchShareItems))));
+    }
+
+    private static int SwitchShareItems(CommandContext<FabricClientCommandSource> context) {
+        InstantMarkerClient.shareItems = !InstantMarkerClient.shareItems;
+
+        if(InstantMarkerClient.shareItems) {
+            context.getSource().sendFeedback(Text.translatable("text.instantmarker.share_items_on").formatted(Formatting.YELLOW));
+        } else {
+            context.getSource().sendFeedback(Text.translatable("text.instantmarker.share_items_off").formatted(Formatting.YELLOW));
+        }
+
+        return 1;
     }
 
     private static int SwitchSound(CommandContext<FabricClientCommandSource> context) {
