@@ -33,13 +33,13 @@ To clear all markers you have created or received, type in the following command
 
 #### Mute/Unmute
 
-To mute a player's marking operation, you need to type this command and he/she will be added into ignore list. It's only ignored by your client,  but others can still see his/her markers.
+To mute a player's marking operation, you need to type this command, and he/she will be added into ignore list. It's only ignored by your client,  but others can still see his/her markers.
 
 ```
 /im mute <playerName>
 ```
 
-To unmute a player, type this command and he/she would be removed from ignore list.
+To unmute a player, type this command, and he/she would be removed from ignore list.
 
 ```
 /im unmute <playerName>
@@ -61,15 +61,17 @@ To share or disable sharing your markers to others, use the following command
 /im local
 ```
 
-#### Share detailed informations
+#### Share detailed information
 
-To share more informations around the marker, there are many things you can do
+To share more information around the marker, there are many things you can do
 
 ```
-/im share <items|...>
+/im share <items|biome>
 ```
 
-- `items`: Share items around the marker (10x10x6 blocks) to others.
+- `items`: Share items around the marker (10×10×6 blocks) to others.
+
+- `biome`: Share the biome the marker at to others.
 
 ## Dependencies
 

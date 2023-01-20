@@ -14,12 +14,15 @@ public class BlockBroadcastPacket {
     private String playerName;
     private BroadcastBlockPos targetPosition;
     private List<BroadcastItem> nearbyItems;
+    private String biomeKey;
     private long broadcastTimestamp;
 
-    public BlockBroadcastPacket(String playerName, BroadcastBlockPos targetPosition, List<BroadcastItem> nearbyItems) {
+    public BlockBroadcastPacket(String playerName, BroadcastBlockPos targetPosition, List<BroadcastItem> nearbyItems, String biomeKey) {
         this.playerName = playerName;
         this.targetPosition = targetPosition;
         this.nearbyItems = nearbyItems;
+        this.biomeKey = biomeKey;
+
         this.broadcastTimestamp = System.currentTimeMillis();
     }
 
@@ -110,5 +113,9 @@ public class BlockBroadcastPacket {
         } else {
             return "null";
         }
+    }
+
+    public String getBiomeKey() {
+        return biomeKey;
     }
 }

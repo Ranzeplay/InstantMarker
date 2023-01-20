@@ -3,6 +3,7 @@
   "chat.instantmarker.mark_too_far": "标记距离过远，再近一点？",
   "chat.instantmarker.marked_block_notification": "标记了方块 %s | 位置 (%.2f, %.2f, %.2f)",
   "chat.instantmarker.marked_entity_notification": "标记了实体 %s | 位置 (%.2f, %.2f, %.2f)",
+  "chat.instantmarker.biome": "生物群系：",
   "text.instantmarker.suggest_position": "标记了一个位置",
   "key.instantmarker.mark": "标记位置",
   "category.instantmarker.keys": "Instant Marker",
@@ -22,8 +23,11 @@
   "text.instantmarker.sound_on": "提示音已开启",
   "text.instantmarker.share_items_on": "开启物品分享",
   "text.instantmarker.share_items_off": "关闭物品分享",
+  "text.instantmarker.share_biome_on": "开启生物群系分享",
+  "text.instantmarker.share_biome_off": "关闭生物群系分享",
   "text.config.instantmarker-config.title": "InstantMarker 全局配置",
   "text.config.instantmarker-config.option.localMode": "本地模式",
   "text.config.instantmarker-config.option.enableSound": "标记提示音",
-  "text.config.instantmarker-config.option.shareItems": "传输标记点附近的物品信息"
+  "text.config.instantmarker-config.option.shareItems": "传输标记点附近的物品信息",
+  "text.config.instantmarker-config.option.shareBiome": "传输标记点所在的生物群系"
 }

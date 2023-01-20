@@ -31,16 +31,30 @@ public class ClientCommand {
                         .executes(ClientCommand::SwitchSound))
                 .then(ClientCommandManager.literal("share")
                         .then(ClientCommandManager.literal("items")
-                                .executes(ClientCommand::SwitchShareItems))));
+                                .executes(ClientCommand::SwitchItemShare))
+                        .then(ClientCommandManager.literal("biome")
+                                .executes(ClientCommand::SwitchBiomeShare))));
     }
 
-    private static int SwitchShareItems(CommandContext<FabricClientCommandSource> context) {
+    private static int SwitchItemShare(CommandContext<FabricClientCommandSource> context) {
         InstantMarkerClient.config.shareItems = !InstantMarkerClient.config.shareItems;
 
         if(InstantMarkerClient.config.shareItems) {
             context.getSource().sendFeedback(Text.translatable("text.instantmarker.share_items_on").formatted(Formatting.YELLOW));
         } else {
             context.getSource().sendFeedback(Text.translatable("text.instantmarker.share_items_off").formatted(Formatting.YELLOW));
+        }
+
+        return 1;
+    }
+
+    private static int SwitchBiomeShare(CommandContext<FabricClientCommandSource> context) {
+        InstantMarkerClient.config.shareBiome = !InstantMarkerClient.config.shareBiome;
+
+        if(InstantMarkerClient.config.shareBiome) {
+            context.getSource().sendFeedback(Text.translatable("text.instantmarker.share_biome_on").formatted(Formatting.YELLOW));
+        } else {
+            context.getSource().sendFeedback(Text.translatable("text.instantmarker.share_biome_off").formatted(Formatting.YELLOW));
         }
 
         return 1;
@@ -69,7 +83,6 @@ public class ClientCommand {
 
         return 1;
     }
-
 
     private static int ClearMarkers(CommandContext<FabricClientCommandSource> context) {
         InstantMarkerClient.existingMarkers.clear();

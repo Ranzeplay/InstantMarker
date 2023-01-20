@@ -45,7 +45,13 @@ public class PositionMarking {
                 }
             }
 
-            var packet = new BlockBroadcastPacket(player.getDisplayName().getString(), new BroadcastBlockPos(blockPos), transformedNearbyItems);
+            var biome = player.getWorld().getBiome(player.getBlockPos()).getKey();
+            String biomeKey = "";
+            if(biome.isPresent() && InstantMarkerClient.config.shareBiome) {
+                biomeKey = "biome." + biome.get().getValue().toTranslationKey();
+            }
+
+            var packet = new BlockBroadcastPacket(player.getDisplayName().getString(), new BroadcastBlockPos(blockPos), transformedNearbyItems, biomeKey);
             var json = packet.toJsonString();
             // InstantMarker.LOGGER.debug(json);
             if (InstantMarkerClient.config.localMode) {
@@ -84,6 +90,13 @@ public class PositionMarking {
                     var translatedBlockName = Text.translatable(item.getTranslationKey());
                     player.sendMessage(translatedBlockName.append(" x").append(String.valueOf(item.getCount())));
                 }
+            }
+
+            // Show biome if present
+            if(!packetContent.getBiomeKey().equals("")) {
+                var biome = Text.translatable(packetContent.getBiomeKey());
+                player.sendMessage(Text.translatable("chat.instantmarker.biome").formatted(Formatting.BOLD, Formatting.AQUA));
+                player.sendMessage(biome);
             }
 
             // Save marker

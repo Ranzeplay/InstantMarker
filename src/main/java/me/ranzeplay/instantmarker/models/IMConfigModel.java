@@ -15,6 +15,8 @@ public class IMConfigModel {
     // Share nearby items of your marker to others
     public boolean shareItems = true;
 
+    public boolean shareBiome = true;
+
     public IMConfigModel(boolean localMode, boolean enableSound, boolean shareItems) {
         this.localMode = localMode;
         this.enableSound = enableSound;

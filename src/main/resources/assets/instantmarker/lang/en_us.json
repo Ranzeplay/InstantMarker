@@ -3,6 +3,7 @@
   "chat.instantmarker.mark_too_far": "Too far, try to mark a closer point?",
   "chat.instantmarker.marked_block_notification": "Marked block %s | Loc (%.2f, %.2f, %.2f)",
   "chat.instantmarker.marked_entity_notification": "Marked entity %s | Loc (%.2f, %.2f, %.2f)",
+  "chat.instantmarker.biome": "Biome: ",
   "text.instantmarker.suggest_position": " suggested a position ",
   "key.instantmarker.mark": "Mark position",
   "category.instantmarker.keys": "Instant Marker",
@@ -22,8 +23,11 @@
   "text.instantmarker.sound_on": "Sound enabled!",
   "text.instantmarker.share_items_on": "Start sharing items",
   "text.instantmarker.share_items_off": "Stop sharing items",
+  "text.instantmarker.share_biome_on": "Start sharing biome",
+  "text.instantmarker.share_biome_off": "Stop sharing biome",
   "text.config.instantmarker-config.title": "InstantMarker global configurations",
   "text.config.instantmarker-config.option.localMode": "Local mode",
   "text.config.instantmarker-config.option.enableSound": "Marking sound",
-  "text.config.instantmarker-config.option.shareItems": "Share items nearby the marker"
+  "text.config.instantmarker-config.option.shareItems": "Share items nearby the marker",
+  "text.config.instantmarker-config.option.shareBiome": "Share the biome the marker at"
 }
