@@ -21,5 +21,9 @@
   "text.instantmarker.sound_off": "Sound disabled!",
   "text.instantmarker.sound_on": "Sound enabled!",
   "text.instantmarker.share_items_on": "Start sharing items",
-  "text.instantmarker.share_items_off": "Stop sharing items"
+  "text.instantmarker.share_items_off": "Stop sharing items",
+  "text.config.instantmarker-config.title": "InstantMarker global configurations",
+  "text.config.instantmarker-config.option.localMode": "Local mode",
+  "text.config.instantmarker-config.option.enableSound": "Marking sound",
+  "text.config.instantmarker-config.option.shareItems": "Share items nearby the marker"
 }

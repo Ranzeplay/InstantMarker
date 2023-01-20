@@ -35,9 +35,9 @@ public class ClientCommand {
     }
 
     private static int SwitchShareItems(CommandContext<FabricClientCommandSource> context) {
-        InstantMarkerClient.shareItems = !InstantMarkerClient.shareItems;
+        InstantMarkerClient.config.shareItems = !InstantMarkerClient.config.shareItems;
 
-        if(InstantMarkerClient.shareItems) {
+        if(InstantMarkerClient.config.shareItems) {
             context.getSource().sendFeedback(Text.translatable("text.instantmarker.share_items_on").formatted(Formatting.YELLOW));
         } else {
             context.getSource().sendFeedback(Text.translatable("text.instantmarker.share_items_off").formatted(Formatting.YELLOW));
@@ -47,9 +47,9 @@ public class ClientCommand {
     }
 
     private static int SwitchSound(CommandContext<FabricClientCommandSource> context) {
-        InstantMarkerClient.enableSound = !InstantMarkerClient.enableSound;
+        InstantMarkerClient.config.enableSound = !InstantMarkerClient.config.enableSound;
 
-        if(InstantMarkerClient.enableSound) {
+        if(InstantMarkerClient.config.enableSound) {
             context.getSource().sendFeedback(Text.translatable("text.instantmarker.sound_on").formatted(Formatting.YELLOW));
         } else {
             context.getSource().sendFeedback(Text.translatable("text.instantmarker.sound_off").formatted(Formatting.YELLOW));
@@ -59,9 +59,9 @@ public class ClientCommand {
     }
 
     private static int SwitchLocalMode(CommandContext<FabricClientCommandSource> context) {
-        InstantMarkerClient.localMode = !InstantMarkerClient.localMode;
+        InstantMarkerClient.config.localMode = !InstantMarkerClient.config.localMode;
 
-        if(InstantMarkerClient.localMode) {
+        if(InstantMarkerClient.config.localMode) {
             context.getSource().sendFeedback(Text.translatable("text.instantmarker.local_mode_on").formatted(Formatting.YELLOW));
         } else {
             context.getSource().sendFeedback(Text.translatable("text.instantmarker.local_mode_off").formatted(Formatting.YELLOW));

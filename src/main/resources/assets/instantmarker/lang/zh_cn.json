@@ -21,5 +21,9 @@
   "text.instantmarker.sound_off": "提示音已关闭",
   "text.instantmarker.sound_on": "提示音已开启",
   "text.instantmarker.share_items_on": "开启物品分享",
-  "text.instantmarker.share_items_off": "关闭物品分享"
+  "text.instantmarker.share_items_off": "关闭物品分享",
+  "text.config.instantmarker-config.title": "InstantMarker 全局配置",
+  "text.config.instantmarker-config.option.localMode": "本地模式",
+  "text.config.instantmarker-config.option.enableSound": "标记提示音",
+  "text.config.instantmarker-config.option.shareItems": "传输标记点附近的物品信息"
 }

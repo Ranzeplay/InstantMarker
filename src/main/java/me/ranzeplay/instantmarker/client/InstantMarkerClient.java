@@ -1,7 +1,9 @@
 package me.ranzeplay.instantmarker.client;
 
+import me.ranzeplay.instantmarker.models.IMConfig;
 import me.ranzeplay.instantmarker.models.BlockBroadcastPacket;
 import me.ranzeplay.instantmarker.InstantMarker;
+import me.ranzeplay.instantmarker.models.IMConfigModel;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -21,17 +23,14 @@ public class InstantMarkerClient implements ClientModInitializer {
     public static ArrayList<BlockBroadcastPacket> existingMarkers = new ArrayList<>();
     public static HashSet<String> mutedPlayers = new HashSet<>();
 
-    // Prevent sharing markers to others while playing in multiplayer server
-    public static boolean localMode = false;
+    public final static IMConfig savedConfig = IMConfig.createAndLoad();
 
-    // Enable a ding sound on marking position
-    public static boolean enableSound = true;
-
-    // Share nearby items of your marker to others
-    public static boolean shareItems = true;
+    public static IMConfigModel config;
 
     @Override
     public void onInitializeClient() {
+        config = IMConfigModel.load(savedConfig);
+
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.instantmarker.mark",
                 InputUtil.Type.KEYSYM,
@@ -49,11 +48,10 @@ public class InstantMarkerClient implements ClientModInitializer {
                 -> PositionMarking.ReceiveMarker(minecraftClient, packetByteBuf));
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            // Reset status
             existingMarkers.clear();
             mutedPlayers.clear();
-            localMode = false;
-            enableSound = true;
-            shareItems = true;
+            config = IMConfigModel.load(savedConfig);
         });
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> ClientCommand.Register(dispatcher));
     }

@@ -39,7 +39,7 @@ public class PositionMarking {
             var nearbyItems = player.getWorld().getEntitiesByClass(ItemEntity.class, Box.of(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()), 5, 3, 5), itemEntity -> true);
             ArrayList<BroadcastItem> transformedNearbyItems = new ArrayList<>();
             // Add nearby items when it enabled
-            if (InstantMarkerClient.shareItems) {
+            if (InstantMarkerClient.config.shareItems) {
                 for (var item : nearbyItems) {
                     transformedNearbyItems.add(new BroadcastItem(item.getStack().getTranslationKey(), item.getStack().getCount()));
                 }
@@ -48,7 +48,7 @@ public class PositionMarking {
             var packet = new BlockBroadcastPacket(player.getDisplayName().getString(), new BroadcastBlockPos(blockPos), transformedNearbyItems);
             var json = packet.toJsonString();
             // InstantMarker.LOGGER.debug(json);
-            if (InstantMarkerClient.localMode) {
+            if (InstantMarkerClient.config.localMode) {
                 // Send internally when local mode enabled
                 ReceiveMarker(MinecraftClient.getInstance(), PacketByteBufs.create().writeText(Text.of(json)));
             } else {
@@ -72,7 +72,7 @@ public class PositionMarking {
             player.sendMessage(packetContent.fullText(client.player.getPos()), true);
 
             // Play sound if player allows
-            if (InstantMarkerClient.enableSound) {
+            if (InstantMarkerClient.config.enableSound) {
                 client.worldRenderer.playSong(SoundEvents.ENTITY_ARROW_HIT_PLAYER, client.player.getBlockPos().up(5));
             }
 
