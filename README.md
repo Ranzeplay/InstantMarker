@@ -13,6 +13,12 @@ A Minecraft Fabric Mod that can mark the position you are pointing to and broadc
 
 Install the mod, join a server or your single player world and press Z (you can change to other keys in Key Binding settings).
 
+### Configuration
+
+You can modify global configurations in mod menu.
+
+Also, we provided a command system that you can change configurations temporarily in game.
+
 ### Commands
 
 All in one root command: `/im`
@@ -55,7 +61,35 @@ To share or disable sharing your markers to others, use the following command
 /im local
 ```
 
+#### Share detailed informations
 
+To share more informations around the marker, there are many things you can do
+
+```
+/im share <items|...>
+```
+
+- `items`: Share items around the marker (10x10x6 blocks) to others.
+
+## Dependencies
+
+- oωo
+  
+  - Link: https://github.com/wisp-forest/owo-lib
+  
+  - Version requirement: >=0.8.2
+  
+  - Provides configuration management
+
+- (Optional) Mod Menu
+  
+  - Link: https://github.com/TerraformersMC/ModMenu
+  
+  - Version requirement: >=4.0.5
+  
+  - Provides a global configurations panel
+  
+  
 
 ## License
 
