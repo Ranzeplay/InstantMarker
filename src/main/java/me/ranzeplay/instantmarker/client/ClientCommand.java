@@ -33,7 +33,13 @@ public class ClientCommand {
                         .then(ClientCommandManager.literal("items")
                                 .executes(ClientCommand::SwitchItemShare))
                         .then(ClientCommandManager.literal("biome")
-                                .executes(ClientCommand::SwitchBiomeShare))));
+                                .executes(ClientCommand::SwitchBiomeShare)))
+                .then(ClientCommandManager.literal("here").executes(ClientCommand::here)));
+    }
+
+    private static int here(CommandContext<FabricClientCommandSource> fabricClientCommandSourceCommandContext) {
+        PositionMarking.MarkPlayerPosition();
+        return 1;
     }
 
     private static int SwitchItemShare(CommandContext<FabricClientCommandSource> context) {

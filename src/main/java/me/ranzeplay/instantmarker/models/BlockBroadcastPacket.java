@@ -16,12 +16,14 @@ public class BlockBroadcastPacket {
     private List<BroadcastItem> nearbyItems;
     private String biomeKey;
     private long broadcastTimestamp;
+    private String dimensionKey;
 
-    public BlockBroadcastPacket(String playerName, BroadcastBlockPos targetPosition, List<BroadcastItem> nearbyItems, String biomeKey) {
+    public BlockBroadcastPacket(String playerName, BroadcastBlockPos targetPosition, List<BroadcastItem> nearbyItems, String biomeKey, String dimensionKey) {
         this.playerName = playerName;
         this.targetPosition = targetPosition;
         this.nearbyItems = nearbyItems;
         this.biomeKey = biomeKey;
+        this.dimensionKey = dimensionKey;
 
         this.broadcastTimestamp = System.currentTimeMillis();
     }
@@ -58,7 +60,7 @@ public class BlockBroadcastPacket {
                 .append(spanText);
     }
 
-    public Text fullText(Vec3d sourcePos) {
+    public Text markerText(Vec3d sourcePos) {
         var playerNameText = Text.literal(playerName).formatted(Formatting.BOLD, Formatting.YELLOW);
         var locationText = Text.literal(String.format("(%d, %d, %d)", targetPosition.getX(), targetPosition.getY(), targetPosition.getZ())).formatted(Formatting.AQUA);
 
@@ -69,6 +71,24 @@ public class BlockBroadcastPacket {
                 .append(Text.translatable("text.instantmarker.suggest_position"))
                 .append(locationText)
                 .append(" : ")
+                .append(distanceText);
+    }
+
+    public Text locationText(Vec3d sourcePos) {
+        var playerNameText = Text.literal(playerName).formatted(Formatting.BOLD, Formatting.YELLOW);
+
+        var locationText = Text.literal(String.format("(%d, %d, %d)", targetPosition.getX(), targetPosition.getY(), targetPosition.getZ())).formatted(Formatting.AQUA);
+        var dimensionText = Text.translatable(dimensionKey).formatted(Formatting.AQUA);
+
+        var distanceText = Text.literal(String.format("(%.1fm)", getDistance(sourcePos))).formatted(Formatting.GREEN);
+
+        return Text.empty()
+                .append(playerNameText)
+                .append(" @ ")
+                .append(dimensionText)
+                .append(" ")
+                .append(locationText)
+                .append(" ")
                 .append(distanceText);
     }
 

@@ -43,12 +43,14 @@ public class InstantMarkerClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyBinding.wasPressed()) {
-                PositionMarking.MarkPosition();
+                PositionMarking.MarkPointedPosition();
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(InstantMarker.BROADCAST_LOCATION_ID, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender)
+        ClientPlayNetworking.registerGlobalReceiver(InstantMarker.BROADCAST_MARKER_ID, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender)
                 -> PositionMarking.ReceiveMarker(minecraftClient, packetByteBuf));
+        ClientPlayNetworking.registerGlobalReceiver(InstantMarker.BROADCAST_PLAYER_LOCATION_ID, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender)
+                -> PositionMarking.ReceivePlayerLocation(minecraftClient, packetByteBuf));
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             // Reset status
