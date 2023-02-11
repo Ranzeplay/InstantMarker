@@ -19,7 +19,7 @@ public class PositionBroadcast {
         var originalBuffer = new Gson().fromJson(buf.readString(), BlockBroadcastPacket.class);
 
         currentWorldPlayers.forEach((player) -> {
-            InstantMarker.LOGGER.debug(player.getName().getString() + " has just broadcast his/her location");
+            InstantMarker.LOGGER.debug(sender.getName().getString() + " has just broadcast a position marker");
             ServerPlayNetworking.send(player, BROADCAST_LOCATION_ID, originalBuffer.toPacketByteBuf());
         });
     }
