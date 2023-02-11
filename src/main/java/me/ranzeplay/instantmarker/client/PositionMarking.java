@@ -19,6 +19,8 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -47,7 +49,7 @@ public class PositionMarking {
 
             var biome = player.getWorld().getBiome(player.getBlockPos()).getKey();
             String biomeKey = "";
-            if(biome.isPresent() && InstantMarkerClient.config.shareBiome) {
+            if (biome.isPresent() && InstantMarkerClient.config.shareBiome) {
                 biomeKey = "biome." + biome.get().getValue().toTranslationKey();
             }
 
@@ -58,7 +60,11 @@ public class PositionMarking {
                 // Send internally when local mode enabled
                 ReceiveMarker(MinecraftClient.getInstance(), PacketByteBufs.create().writeText(Text.of(json)));
             } else {
-                ClientPlayNetworking.send(InstantMarker.SUGGEST_LOCATION_ID, PacketByteBufs.create().writeString(json));
+                var duration = Duration.between(Instant.now(), InstantMarkerClient.LastMarkingTime);
+                if (duration.toMillis() > 50) {
+                    ClientPlayNetworking.send(InstantMarker.SUGGEST_LOCATION_ID, PacketByteBufs.create().writeString(json));
+                    InstantMarkerClient.LastMarkingTime = Instant.now();
+                }
             }
         } else if (hit.getType() == HitResult.Type.ENTITY) {
             var entity = ((EntityHitResult) hit).getEntity();
@@ -79,7 +85,7 @@ public class PositionMarking {
 
             // Play sound if player allows
             if (InstantMarkerClient.config.enableSound) {
-                client.worldRenderer.playSong(SoundEvents.ENTITY_ARROW_HIT_PLAYER, client.player.getBlockPos().up(5));
+                client.worldRenderer.playSong(SoundEvents.ENTITY_ARROW_HIT_PLAYER, client.player.getBlockPos().up(2));
             }
 
             // Show nearby items
@@ -93,7 +99,7 @@ public class PositionMarking {
             }
 
             // Show biome if present
-            if(!packetContent.getBiomeKey().equals("")) {
+            if (!packetContent.getBiomeKey().equals("")) {
                 var biome = Text.translatable(packetContent.getBiomeKey());
                 player.sendMessage(Text.translatable("chat.instantmarker.biome").formatted(Formatting.BOLD, Formatting.AQUA));
                 player.sendMessage(biome);

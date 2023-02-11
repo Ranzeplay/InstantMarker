@@ -14,6 +14,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -22,6 +23,8 @@ public class InstantMarkerClient implements ClientModInitializer {
 
     public static ArrayList<BlockBroadcastPacket> existingMarkers = new ArrayList<>();
     public static HashSet<String> mutedPlayers = new HashSet<>();
+
+    public static Instant LastMarkingTime = Instant.now();
 
     public final static IMConfig savedConfig = IMConfig.createAndLoad();
 
