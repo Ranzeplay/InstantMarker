@@ -8,6 +8,7 @@ import me.ranzeplay.instantmarker.models.BroadcastItem;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.sound.SoundEvents;
@@ -89,11 +90,11 @@ public class PositionMarking {
         // InstantMarker.LOGGER.debug(json);
         if (InstantMarkerClient.config.localMode) {
             // Send internally when local mode enabled
-            ReceiveMarker(MinecraftClient.getInstance(), PacketByteBufs.create().writeText(Text.of(json)));
+            ReceiveMarker(MinecraftClient.getInstance(), PacketByteBufs.create().writeString(json));
         } else {
             var duration = Duration.between(InstantMarkerClient.LastMarkingTime, Instant.now());
             if (duration.toMillis() > 50) {
-                ClientPlayNetworking.send(id, PacketByteBufs.create().writeString(json));
+                ClientPlayNetworking.send(packet);
                 InstantMarkerClient.LastMarkingTime = Instant.now();
             }
         }
@@ -109,7 +110,7 @@ public class PositionMarking {
 
             // Play sound if player allows
             if (InstantMarkerClient.config.enableSound) {
-                client.worldRenderer.playSong(SoundEvents.ENTITY_ARROW_HIT_PLAYER, client.player.getBlockPos().up(2));
+                client.player.playSound(SoundEvents.ENTITY_ARROW_HIT_PLAYER);
             }
 
             // Show nearby items
@@ -123,7 +124,7 @@ public class PositionMarking {
             }
 
             // Show biome if present
-            if (!packetContent.getBiomeKey().equals("")) {
+            if (!packetContent.getBiomeKey().isEmpty()) {
                 var biome = Text.translatable(packetContent.getBiomeKey());
                 player.sendMessage(Text.translatable("chat.instantmarker.biome").formatted(Formatting.BOLD, Formatting.AQUA));
                 player.sendMessage(biome);
@@ -134,7 +135,7 @@ public class PositionMarking {
 
             // Limit max markers
             while (InstantMarkerClient.existingMarkers.size() > 3) {
-                InstantMarkerClient.existingMarkers.remove(0);
+                InstantMarkerClient.existingMarkers.removeFirst();
             }
 
             // Remove duplicated
@@ -154,7 +155,7 @@ public class PositionMarking {
 
             // Play sound if player allows
             if (InstantMarkerClient.config.enableSound) {
-                client.worldRenderer.playSong(SoundEvents.ENTITY_ARROW_HIT_PLAYER, client.player.getBlockPos().up(2));
+                client.player.playSound(SoundEvents.ENTITY_ARROW_HIT_PLAYER);
             }
 
             // Save marker
@@ -162,7 +163,7 @@ public class PositionMarking {
 
             // Limit max markers
             while (InstantMarkerClient.existingMarkers.size() > 3) {
-                InstantMarkerClient.existingMarkers.remove(0);
+                InstantMarkerClient.existingMarkers.removeFirst();
             }
 
             // Remove duplicated

@@ -3,9 +3,9 @@ package me.ranzeplay.instantmarker.models;
 import net.minecraft.util.math.BlockPos;
 
 public class BroadcastBlockPos {
-    private int x;
-    private int y;
-    private int z;
+    private final int x;
+    private final int y;
+    private final int z;
 
     public BroadcastBlockPos(BlockPos pos) {
         x = pos.getX();

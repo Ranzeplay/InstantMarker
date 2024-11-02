@@ -19,7 +19,7 @@ public class LocalizationManager {
     public static Text SelfMarkEntity(Entity entity) {
         return Text.empty()
                 .append(Text.translatable("text.instantmarker.mark_entity"))
-                .append(entity.getEntityName())
+                .append(entity.getDisplayName())
                 .append(Text.translatable("text.instantmarker.separator"))
                 .append(Text.translatable("text.instantmarker.loc"))
                 .append(String.format("(%.1f, %.1f, %.1f)", entity.getX(), entity.getY(), entity.getZ()));

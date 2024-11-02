@@ -12,6 +12,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.CustomPayload;
 import org.lwjgl.glfw.GLFW;
 
 import java.time.Instant;
@@ -47,10 +49,10 @@ public class InstantMarkerClient implements ClientModInitializer {
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(InstantMarker.BROADCAST_MARKER_ID, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender)
-                -> PositionMarking.ReceiveMarker(minecraftClient, packetByteBuf));
-        ClientPlayNetworking.registerGlobalReceiver(InstantMarker.BROADCAST_PLAYER_LOCATION_ID, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender)
-                -> PositionMarking.ReceivePlayerLocation(minecraftClient, packetByteBuf));
+        ClientPlayNetworking.registerGlobalReceiver(new CustomPayload.Id<BlockBroadcastPacket>(InstantMarker.BROADCAST_MARKER_ID), (payload, context)
+                -> PositionMarking.ReceiveMarker(context.client(), payload));
+        ClientPlayNetworking.registerGlobalReceiver(new CustomPayload.Id<>(InstantMarker.BROADCAST_PLAYER_LOCATION_ID), (payload, context)
+                -> PositionMarking.ReceivePlayerLocation(context.client(), payload));
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             // Reset status

@@ -3,6 +3,7 @@ package me.ranzeplay.instantmarker.models;
 import com.google.gson.Gson;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
@@ -10,7 +11,9 @@ import net.minecraft.util.math.Vec3d;
 import java.time.Duration;
 import java.util.List;
 
-public class BlockBroadcastPacket {
+public class BlockBroadcastPacket implements CustomPayload {
+    public static final CustomPayload.Id<BlockBroadcastPacket> ID = new Id<>();
+
     private String playerName;
     private BroadcastBlockPos targetPosition;
     private List<BroadcastItem> nearbyItems;
@@ -30,7 +33,7 @@ public class BlockBroadcastPacket {
 
     public PacketByteBuf toPacketByteBuf() {
         var buffer = PacketByteBufs.create();
-        buffer.writeText(Text.literal(this.toJsonString()));
+        buffer.writeString(this.toJsonString());
         return buffer;
     }
 
@@ -39,7 +42,7 @@ public class BlockBroadcastPacket {
     }
 
     public static BlockBroadcastPacket fromPacketByteBuf(PacketByteBuf buffer) {
-        var text = buffer.readText().getString();
+        var text = buffer.readString();
         return fromJsonString(text);
     }
 
@@ -137,5 +140,10 @@ public class BlockBroadcastPacket {
 
     public String getBiomeKey() {
         return biomeKey;
+    }
+
+    @Override
+    public Id<? extends CustomPayload> getId() {
+        return null;
     }
 }

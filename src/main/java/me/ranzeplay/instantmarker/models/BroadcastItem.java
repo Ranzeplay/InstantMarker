@@ -1,8 +1,8 @@
 package me.ranzeplay.instantmarker.models;
 
 public class BroadcastItem {
-    private String translationKey;
-    private int count;
+    private final String translationKey;
+    private final int count;
 
     public BroadcastItem(String translationKey, int count) {
         this.translationKey = translationKey;
