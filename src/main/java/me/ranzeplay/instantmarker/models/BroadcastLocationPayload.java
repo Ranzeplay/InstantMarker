@@ -1,8 +1,7 @@
 package me.ranzeplay.instantmarker.models;
 
 import com.google.gson.Gson;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.network.PacketByteBuf;
+import me.ranzeplay.instantmarker.InstantMarker;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -11,7 +10,9 @@ import net.minecraft.util.math.Vec3d;
 import java.time.Duration;
 import java.util.List;
 
-public class BlockBroadcastPacket implements CustomPayload {
+public class BroadcastLocationPayload implements CustomPayload {
+    public static final CustomPayload.Id<BroadcastLocationPayload> ID = new Id<>(InstantMarker.BROADCAST_MARKER_ID);
+
     private String playerName;
     private BroadcastBlockPos targetPosition;
     private List<BroadcastItem> nearbyItems;
@@ -19,7 +20,7 @@ public class BlockBroadcastPacket implements CustomPayload {
     private long broadcastTimestamp;
     private String dimensionKey;
 
-    public BlockBroadcastPacket(String playerName, BroadcastBlockPos targetPosition, List<BroadcastItem> nearbyItems, String biomeKey, String dimensionKey) {
+    public BroadcastLocationPayload(String playerName, BroadcastBlockPos targetPosition, List<BroadcastItem> nearbyItems, String biomeKey, String dimensionKey) {
         this.playerName = playerName;
         this.targetPosition = targetPosition;
         this.nearbyItems = nearbyItems;
@@ -29,37 +30,17 @@ public class BlockBroadcastPacket implements CustomPayload {
         this.broadcastTimestamp = System.currentTimeMillis();
     }
 
-    public BlockBroadcastPacket(BroadcastLocationPayload payload) {
-        this.playerName = payload.getPlayerName();
-        this.targetPosition = payload.getTargetPosition();
-        this.nearbyItems = payload.getNearbyItems();
-        this.biomeKey = payload.getBiomeKey();
-        this.broadcastTimestamp = payload.getBroadcastTimestamp();
-        this.dimensionKey = payload.getDimensionKey();
-    }
-
-    public BlockBroadcastPacket(BroadcastPlayerPayload payload) {
-        this.playerName = payload.getPlayerName();
-        this.targetPosition = payload.getTargetPosition();
-        this.nearbyItems = payload.getNearbyItems();
-        this.biomeKey = payload.getBiomeKey();
-        this.broadcastTimestamp = payload.getBroadcastTimestamp();
-        this.dimensionKey = payload.getDimensionKey();
-    }
-
-    public PacketByteBuf toPacketByteBuf() {
-        var buffer = PacketByteBufs.create();
-        buffer.writeString(this.toJsonString());
-        return buffer;
+    public BroadcastLocationPayload(SuggestLocationPayload suggestPlayerPayload) {
+        this.playerName = suggestPlayerPayload.getPlayerName();
+        this.targetPosition = suggestPlayerPayload.getTargetPosition();
+        this.nearbyItems = suggestPlayerPayload.getNearbyItems();
+        this.biomeKey = suggestPlayerPayload.getBiomeKey();
+        this.broadcastTimestamp = suggestPlayerPayload.getBroadcastTimestamp();
+        this.dimensionKey = suggestPlayerPayload.getDimensionKey();
     }
 
     public double getDistance(Vec3d source) {
         return new Vec3d(targetPosition.getX(), targetPosition.getY(), targetPosition.getZ()).distanceTo(source);
-    }
-
-    public static BlockBroadcastPacket fromPacketByteBuf(PacketByteBuf buffer) {
-        var text = buffer.readString();
-        return fromJsonString(text);
     }
 
     public Text shortText(Vec3d sourcePos) {
@@ -111,11 +92,6 @@ public class BlockBroadcastPacket implements CustomPayload {
                 .append(distanceText);
     }
 
-    public String toJsonString() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
-    }
-
     public String getPlayerName() {
         return playerName;
     }
@@ -132,8 +108,8 @@ public class BlockBroadcastPacket implements CustomPayload {
         return broadcastTimestamp;
     }
 
-    public static BlockBroadcastPacket fromJsonString(String json) {
-        return new Gson().fromJson(json, BlockBroadcastPacket.class);
+    public String getDimensionKey() {
+        return dimensionKey;
     }
 
     public String getFormattedTimeSpanUntilNow() {
@@ -159,7 +135,7 @@ public class BlockBroadcastPacket implements CustomPayload {
     }
 
     @Override
-    public Id<? extends CustomPayload> getId() {
-        return null;
+    public CustomPayload.Id<? extends CustomPayload> getId() {
+        return ID;
     }
 }

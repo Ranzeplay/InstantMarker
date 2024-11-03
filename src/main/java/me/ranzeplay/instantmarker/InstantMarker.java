@@ -1,9 +1,10 @@
 package me.ranzeplay.instantmarker;
 
+import me.ranzeplay.instantmarker.models.SuggestLocationPayload;
+import me.ranzeplay.instantmarker.models.SuggestPlayerPayload;
 import me.ranzeplay.instantmarker.server.PositionBroadcast;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,9 @@ public class InstantMarker implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        ServerPlayNetworking.registerGlobalReceiver(new CustomPayload.Id<>(SUGGEST_LOCATION_ID), (payload, context)
+        ServerPlayNetworking.registerGlobalReceiver(SuggestLocationPayload.ID, (payload, context)
                 -> PositionBroadcast.BroadcastLocation(context.server(), context.player(), payload));
-        ServerPlayNetworking.registerGlobalReceiver(new CustomPayload.Id<>(SUGGEST_PLAYER_ID), (payload, context)
+        ServerPlayNetworking.registerGlobalReceiver(SuggestPlayerPayload.ID, (payload, context)
                 -> PositionBroadcast.BroadcastPlayer(context.server(), context.player(), payload));
     }
 }

@@ -2,9 +2,7 @@ package me.ranzeplay.instantmarker.client;
 
 import me.ranzeplay.instantmarker.InstantMarker;
 import me.ranzeplay.instantmarker.LocalizationManager;
-import me.ranzeplay.instantmarker.models.BlockBroadcastPacket;
-import me.ranzeplay.instantmarker.models.BroadcastBlockPos;
-import me.ranzeplay.instantmarker.models.BroadcastItem;
+import me.ranzeplay.instantmarker.models.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -56,7 +54,8 @@ public class PositionMarking {
         var player = MinecraftClient.getInstance().player;
         assert player != null;
 
-        MarkPosition(player.getBlockPos(), InstantMarker.SUGGEST_PLAYER_ID);
+        var payload = new SuggestPlayerPayload(player.getUuidAsString());
+        ClientPlayNetworking.send(payload);
     }
 
     public static void MarkPosition(BlockPos blockPos, Identifier id) {
@@ -85,12 +84,11 @@ public class PositionMarking {
             dimensionKey = dimension.get().getValue().toTranslationKey();
         }
 
-        var packet = new BlockBroadcastPacket(player.getDisplayName().getString(), new BroadcastBlockPos(blockPos), transformedNearbyItems, biomeKey, dimensionKey);
-        var json = packet.toJsonString();
+        var packet = new SuggestLocationPayload(player.getDisplayName().getString(), new BroadcastBlockPos(blockPos), transformedNearbyItems, biomeKey, dimensionKey);
         // InstantMarker.LOGGER.debug(json);
         if (InstantMarkerClient.config.localMode) {
             // Send internally when local mode enabled
-            ReceiveMarker(MinecraftClient.getInstance(), PacketByteBufs.create().writeString(json));
+            ReceiveMarker(MinecraftClient.getInstance(), new BroadcastLocationPayload(packet));
         } else {
             var duration = Duration.between(InstantMarkerClient.LastMarkingTime, Instant.now());
             if (duration.toMillis() > 50) {
@@ -100,13 +98,11 @@ public class PositionMarking {
         }
     }
 
-    public static void ReceiveMarker(MinecraftClient client, PacketByteBuf buf) {
-        var packetContent = BlockBroadcastPacket.fromPacketByteBuf(buf);
-
+    public static void ReceiveMarker(MinecraftClient client, BroadcastLocationPayload payload) {
         var player = client.player;
         assert player != null;
         if (!InstantMarkerClient.mutedPlayers.contains(player.getName().getString())) {
-            player.sendMessage(packetContent.markerText(client.player.getPos()), true);
+            player.sendMessage(payload.markerText(client.player.getPos()), true);
 
             // Play sound if player allows
             if (InstantMarkerClient.config.enableSound) {
@@ -114,7 +110,7 @@ public class PositionMarking {
             }
 
             // Show nearby items
-            var nearbyItems = packetContent.getNearbyItems();
+            var nearbyItems = payload.getNearbyItems();
             if (!nearbyItems.isEmpty()) {
                 player.sendMessage(Text.translatable("chat.instantmarker.nearby_items").formatted(Formatting.BOLD, Formatting.AQUA));
                 for (var item : nearbyItems) {
@@ -124,14 +120,14 @@ public class PositionMarking {
             }
 
             // Show biome if present
-            if (!packetContent.getBiomeKey().isEmpty()) {
-                var biome = Text.translatable(packetContent.getBiomeKey());
+            if (!payload.getBiomeKey().isEmpty()) {
+                var biome = Text.translatable(payload.getBiomeKey());
                 player.sendMessage(Text.translatable("chat.instantmarker.biome").formatted(Formatting.BOLD, Formatting.AQUA));
                 player.sendMessage(biome);
             }
 
             // Save marker
-            InstantMarkerClient.existingMarkers.add(packetContent);
+            InstantMarkerClient.existingMarkers.add(new BlockBroadcastPacket(payload));
 
             // Limit max markers
             while (InstantMarkerClient.existingMarkers.size() > 3) {
@@ -143,13 +139,11 @@ public class PositionMarking {
         }
     }
 
-    public static void ReceivePlayerLocation(MinecraftClient client, PacketByteBuf buf) {
-        var packetContent = BlockBroadcastPacket.fromPacketByteBuf(buf);
-
+    public static void ReceivePlayerLocation(MinecraftClient client, BroadcastPlayerPayload payload) {
         var player = client.player;
         assert player != null;
         if (!InstantMarkerClient.mutedPlayers.contains(player.getName().getString())) {
-            var text = packetContent.locationText(client.player.getPos());
+            var text = payload.locationText(client.player.getPos());
             player.sendMessage(text, true);
             player.sendMessage(text, false);
 
@@ -159,7 +153,7 @@ public class PositionMarking {
             }
 
             // Save marker
-            InstantMarkerClient.existingMarkers.add(packetContent);
+            InstantMarkerClient.existingMarkers.add(new BlockBroadcastPacket(payload));
 
             // Limit max markers
             while (InstantMarkerClient.existingMarkers.size() > 3) {
