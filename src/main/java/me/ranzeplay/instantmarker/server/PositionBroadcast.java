@@ -1,14 +1,13 @@
 package me.ranzeplay.instantmarker.server;
 
-import com.google.gson.Gson;
 import me.ranzeplay.instantmarker.InstantMarker;
-import me.ranzeplay.instantmarker.client.InstantMarkerClient;
 import me.ranzeplay.instantmarker.models.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Box;
@@ -17,9 +16,7 @@ import net.minecraft.util.math.Vec3d;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static me.ranzeplay.instantmarker.InstantMarker.BROADCAST_MARKER_ID;
-import static me.ranzeplay.instantmarker.InstantMarker.BROADCAST_PLAYER_LOCATION_ID;
-
+@Environment(EnvType.SERVER)
 public class PositionBroadcast {
     public static void BroadcastLocation(MinecraftServer server, ServerPlayerEntity sender, SuggestLocationPayload payload) {
         var currentWorldPlayers = server.getPlayerManager().getPlayerList();
@@ -28,7 +25,7 @@ public class PositionBroadcast {
 
         var broadcastPayload = new BroadcastLocationPayload(payload);
         currentWorldPlayers.forEach((player) -> {
-            InstantMarker.LOGGER.debug(sender.getName().getString() + " has just broadcast a position marker");
+            InstantMarker.LOGGER.debug("{} has just broadcast a position marker", sender.getName().getString());
             ServerPlayNetworking.send(player, broadcastPayload);
         });
     }
@@ -36,12 +33,13 @@ public class PositionBroadcast {
     public static void BroadcastPlayer(MinecraftServer server, ServerPlayerEntity sender, SuggestPlayerPayload payload) {
         var targetPlayer = server.getPlayerManager().getPlayer(UUID.fromString(payload.uuid));
 
+        assert targetPlayer != null;
         var blockPos = targetPlayer.getBlockPos();
         // Get nearby items
         var nearbyItems = targetPlayer.getWorld().getEntitiesByClass(ItemEntity.class, Box.of(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()), 5, 3, 5), itemEntity -> true);
         ArrayList<BroadcastItem> transformedNearbyItems = new ArrayList<>();
         // Add nearby items when it enabled
-        if (InstantMarkerClient.config.shareItems) {
+        if (payload.isWithNearbyItems()) {
             for (var item : nearbyItems) {
                 transformedNearbyItems.add(new BroadcastItem(item.getStack().getTranslationKey(), item.getStack().getCount()));
             }
@@ -49,7 +47,7 @@ public class PositionBroadcast {
 
         var biome = targetPlayer.getWorld().getBiome(targetPlayer.getBlockPos()).getKey();
         String biomeKey = "";
-        if (biome.isPresent() && InstantMarkerClient.config.shareBiome) {
+        if (biome.isPresent() && payload.isWithBiome()) {
             biomeKey = "biome." + biome.get().getValue().toTranslationKey();
         }
 
@@ -65,7 +63,7 @@ public class PositionBroadcast {
 
             var currentWorldPlayers = server.getPlayerManager().getPlayerList();
             currentWorldPlayers.forEach((player) -> {
-                InstantMarker.LOGGER.debug(sender.getName().getString() + " has just broadcast his/her location");
+                InstantMarker.LOGGER.debug("{} has just broadcast his/her location", sender.getName().getString());
                 ServerPlayNetworking.send(player, broadcastPayload);
             });
         } else {

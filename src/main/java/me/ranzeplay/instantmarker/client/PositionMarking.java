@@ -4,11 +4,8 @@ import me.ranzeplay.instantmarker.InstantMarker;
 import me.ranzeplay.instantmarker.LocalizationManager;
 import me.ranzeplay.instantmarker.models.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -54,7 +51,7 @@ public class PositionMarking {
         var player = MinecraftClient.getInstance().player;
         assert player != null;
 
-        var payload = new SuggestPlayerPayload(player.getUuidAsString());
+        var payload = new SuggestPlayerPayload(player.getUuidAsString(), InstantMarkerClient.config.shareItems, InstantMarkerClient.config.shareBiome);
         ClientPlayNetworking.send(payload);
     }
 

@@ -8,12 +8,25 @@ public class SuggestPlayerPayload implements CustomPayload {
 
     public String uuid;
 
-    public SuggestPlayerPayload(String uuid) {
+    public boolean withNearbyItems;
+    public boolean withBiome;
+
+    public SuggestPlayerPayload(String uuid, boolean withNearbyItems, boolean withBiome) {
         this.uuid = uuid;
+        this.withNearbyItems = withNearbyItems;
+        this.withBiome = withBiome;
     }
 
     public String getUuid() {
         return uuid;
+    }
+
+    public boolean isWithNearbyItems() {
+        return withNearbyItems;
+    }
+
+    public boolean isWithBiome() {
+        return withBiome;
     }
 
     @Override
