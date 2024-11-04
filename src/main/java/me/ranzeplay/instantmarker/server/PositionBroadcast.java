@@ -2,8 +2,6 @@ package me.ranzeplay.instantmarker.server;
 
 import me.ranzeplay.instantmarker.InstantMarker;
 import me.ranzeplay.instantmarker.models.*;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -16,7 +14,6 @@ import net.minecraft.util.math.Vec3d;
 import java.util.ArrayList;
 import java.util.UUID;
 
-@Environment(EnvType.SERVER)
 public class PositionBroadcast {
     public static void BroadcastLocation(MinecraftServer server, ServerPlayerEntity sender, SuggestLocationPayload payload) {
         var currentWorldPlayers = server.getPlayerManager().getPlayerList();
