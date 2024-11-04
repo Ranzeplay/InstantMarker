@@ -81,7 +81,7 @@ public class PositionMarking {
             dimensionKey = dimension.get().getValue().toTranslationKey();
         }
 
-        var packet = new SuggestLocationPayload(player.getDisplayName().getString(), new BroadcastBlockPos(blockPos), transformedNearbyItems, biomeKey, dimensionKey);
+        var packet = new SuggestLocationPayload(player.getDisplayName().getString(), blockPos, transformedNearbyItems, biomeKey, dimensionKey);
         // InstantMarker.LOGGER.debug(json);
         if (InstantMarkerClient.config.localMode) {
             // Send internally when local mode enabled

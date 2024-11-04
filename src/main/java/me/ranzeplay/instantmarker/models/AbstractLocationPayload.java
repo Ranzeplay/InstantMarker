@@ -2,20 +2,21 @@ package me.ranzeplay.instantmarker.models;
 
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import java.time.Duration;
 import java.util.List;
 
 public abstract class AbstractLocationPayload {
-    private final String playerName;
-    private final BroadcastBlockPos targetPosition;
-    private final List<BroadcastItem> nearbyItems;
-    private final String biomeKey;
-    private final long broadcastTimestamp;
-    private final String dimensionKey;
+    final String playerName;
+    final BlockPos targetPosition;
+    final List<BroadcastItem> nearbyItems;
+    final String biomeKey;
+    final long broadcastTimestamp;
+    final String dimensionKey;
 
-    public AbstractLocationPayload(String playerName, BroadcastBlockPos targetPosition, List<BroadcastItem> nearbyItems, String biomeKey, String dimensionKey) {
+    public AbstractLocationPayload(String playerName, BlockPos targetPosition, List<BroadcastItem> nearbyItems, String biomeKey, String dimensionKey) {
         this.playerName = playerName;
         this.targetPosition = targetPosition;
         this.nearbyItems = nearbyItems;
@@ -82,7 +83,7 @@ public abstract class AbstractLocationPayload {
         return playerName;
     }
 
-    public BroadcastBlockPos getTargetPosition() {
+    public BlockPos getTargetPosition() {
         return targetPosition;
     }
 

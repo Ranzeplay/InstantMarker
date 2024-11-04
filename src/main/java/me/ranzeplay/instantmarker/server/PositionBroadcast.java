@@ -57,7 +57,7 @@ public class PositionBroadcast {
             dimensionKey = dimension.get().getValue().toTranslationKey();
         }
 
-        var broadcastPayload = new BroadcastPlayerPayload(targetPlayer.getDisplayName().getString(), new BroadcastBlockPos(blockPos), transformedNearbyItems, biomeKey, dimensionKey);
+        var broadcastPayload = new BroadcastPlayerPayload(targetPlayer.getDisplayName().getString(),blockPos, transformedNearbyItems, biomeKey, dimensionKey);
         if (sender.isPlayer()) {
             sender.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 10));
 
