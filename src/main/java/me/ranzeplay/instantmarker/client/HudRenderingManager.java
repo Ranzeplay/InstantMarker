@@ -21,6 +21,7 @@ public class HudRenderingManager {
 
         for (var marker : InstantMarkerClient.existingMarkers) {
             drawContext.drawText(textRenderer, marker.shortText(client.player.getPos()), 3, (int) y, RGB2Int((short) 255, (short) 255, (short) 255), true);
+            y -= lineHeight;
         }
     }
 
