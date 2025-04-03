@@ -1,11 +1,11 @@
 package me.ranzeplay.instantmarker.client;
 
-import me.ranzeplay.instantmarker.InstantMarker;
 import me.ranzeplay.instantmarker.LocalizationManager;
 import me.ranzeplay.instantmarker.models.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -15,7 +15,6 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.Identifier;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -35,13 +34,13 @@ public class PositionMarking {
 
             player.sendMessage(LocalizationManager.SelfMarkBlock(block, blockPos));
 
-            MarkPosition(blockPos, InstantMarker.SUGGEST_LOCATION_ID);
+            MarkPosition(blockPos);
         } else if (hit.getType() == HitResult.Type.ENTITY) {
             var entity = ((EntityHitResult) hit).getEntity();
 
             player.sendMessage(LocalizationManager.SelfMarkEntity(entity));
 
-            MarkPosition(entity.getBlockPos(), InstantMarker.SUGGEST_LOCATION_ID);
+            MarkPosition(entity.getBlockPos());
         } else {
             player.sendMessage(Text.translatable("chat.instantmarker.mark_too_far").formatted(Formatting.RED));
         }
@@ -55,7 +54,7 @@ public class PositionMarking {
         ClientPlayNetworking.send(payload);
     }
 
-    public static void MarkPosition(BlockPos blockPos, Identifier id) {
+    public static void MarkPosition(BlockPos blockPos) {
         var player = MinecraftClient.getInstance().player;
         assert player != null;
 
@@ -82,7 +81,6 @@ public class PositionMarking {
         }
 
         var packet = new SuggestLocationPayload(player.getDisplayName().getString(), blockPos, transformedNearbyItems, biomeKey, dimensionKey);
-        // InstantMarker.LOGGER.debug(json);
         if (InstantMarkerClient.config.localMode) {
             // Send internally when local mode enabled
             ReceiveMarker(MinecraftClient.getInstance(), new BroadcastLocationPayload(packet));
@@ -103,7 +101,9 @@ public class PositionMarking {
 
             // Play sound if player allows
             if (InstantMarkerClient.config.enableSound) {
-                client.player.playSound(SoundEvents.ENTITY_ARROW_HIT_PLAYER);
+                client.player
+                        .getWorld()
+                        .playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.PLAYERS, 1f, 1f);
             }
 
             // Show nearby items
@@ -146,7 +146,9 @@ public class PositionMarking {
 
             // Play sound if player allows
             if (InstantMarkerClient.config.enableSound) {
-                client.player.playSound(SoundEvents.ENTITY_ARROW_HIT_PLAYER);
+                client.player
+                        .getWorld()
+                        .playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.PLAYERS, 1f, 1f);
             }
 
             // Save marker
