@@ -41,14 +41,14 @@ public class InstantMarkerClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyBinding.wasPressed()) {
-                PositionMarking.MarkPointedPosition();
+                PositionMarking.markPointedPosition();
             }
         });
 
         ClientPlayNetworking.registerGlobalReceiver(BroadcastLocationPayload.ID, (payload, context)
-                -> PositionMarking.ReceiveMarker(context.client(), payload));
+                -> PositionMarking.receiveMarker(context.client(), payload));
         ClientPlayNetworking.registerGlobalReceiver(BroadcastPlayerPayload.ID, (payload, context)
-                -> PositionMarking.ReceivePlayerLocation(context.client(), payload));
+                -> PositionMarking.receivePlayerLocation(context.client(), payload));
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             // Reset status

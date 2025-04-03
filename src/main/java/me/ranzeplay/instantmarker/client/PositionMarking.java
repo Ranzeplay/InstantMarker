@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Vector;
 
 public class PositionMarking {
-    public static void MarkPointedPosition() {
+    public static void markPointedPosition() {
         var player = MinecraftClient.getInstance().player;
         assert player != null;
 
@@ -36,19 +36,19 @@ public class PositionMarking {
 
             player.sendMessage(LocalizationManager.SelfMarkBlock(block, blockPos));
 
-            MarkPosition(blockPos);
+            markPosition(blockPos);
         } else if (hit.getType() == HitResult.Type.ENTITY) {
             var entity = ((EntityHitResult) hit).getEntity();
 
             player.sendMessage(LocalizationManager.SelfMarkEntity(entity));
 
-            MarkPosition(entity.getBlockPos());
+            markPosition(entity.getBlockPos());
         } else {
             player.sendMessage(Text.translatable("chat.instantmarker.mark_too_far").formatted(Formatting.RED));
         }
     }
 
-    public static void MarkPlayerPosition() {
+    public static void markPlayerPosition() {
         var player = MinecraftClient.getInstance().player;
         assert player != null;
 
@@ -56,7 +56,7 @@ public class PositionMarking {
         ClientPlayNetworking.send(payload);
     }
 
-    public static void MarkPosition(BlockPos blockPos) {
+    public static void markPosition(BlockPos blockPos) {
         var player = MinecraftClient.getInstance().player;
         assert player != null;
 
@@ -85,7 +85,7 @@ public class PositionMarking {
         var packet = new SuggestLocationPayload(Objects.requireNonNull(player.getDisplayName()).getString(), blockPos, transformedNearbyItems, biomeKey, dimensionKey);
         if (InstantMarkerClient.config.localMode) {
             // Send internally when local mode enabled
-            ReceiveMarker(MinecraftClient.getInstance(), new BroadcastLocationPayload(packet));
+            receiveMarker(MinecraftClient.getInstance(), new BroadcastLocationPayload(packet));
         } else {
             var duration = Duration.between(InstantMarkerClient.LastMarkingTime, Instant.now());
             if (duration.toMillis() > 50) {
@@ -95,7 +95,7 @@ public class PositionMarking {
         }
     }
 
-    public static void ReceiveMarker(MinecraftClient client, BroadcastLocationPayload payload) {
+    public static void receiveMarker(MinecraftClient client, BroadcastLocationPayload payload) {
         var player = client.player;
         assert player != null;
         if (!InstantMarkerClient.mutedPlayers.contains(player.getName().getString())) {
@@ -138,7 +138,7 @@ public class PositionMarking {
         }
     }
 
-    public static void ReceivePlayerLocation(MinecraftClient client, BroadcastPlayerPayload payload) {
+    public static void receivePlayerLocation(MinecraftClient client, BroadcastPlayerPayload payload) {
         var player = client.player;
         assert player != null;
         if (!InstantMarkerClient.mutedPlayers.contains(player.getName().getString())) {

@@ -38,7 +38,7 @@ public class ClientCommand {
     }
 
     private static int here(CommandContext<FabricClientCommandSource> fabricClientCommandSourceCommandContext) {
-        PositionMarking.MarkPlayerPosition();
+        PositionMarking.markPlayerPosition();
         return 1;
     }
 

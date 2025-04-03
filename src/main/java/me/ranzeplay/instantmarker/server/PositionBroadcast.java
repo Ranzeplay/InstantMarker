@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class PositionBroadcast {
-    public static void BroadcastLocation(MinecraftServer server, ServerPlayerEntity sender, SuggestLocationPayload payload) {
+    public static void broadcastLocation(MinecraftServer server, ServerPlayerEntity sender, SuggestLocationPayload payload) {
         var currentWorldPlayers = server.getPlayerManager().getPlayerList();
         // Remove players not in this world
         currentWorldPlayers.removeIf(p -> p.getWorld() != sender.getWorld());
@@ -27,7 +27,7 @@ public class PositionBroadcast {
         });
     }
 
-    public static void BroadcastPlayer(MinecraftServer server, ServerPlayerEntity sender, SuggestPlayerPayload payload) {
+    public static void broadcastPlayer(MinecraftServer server, ServerPlayerEntity sender, SuggestPlayerPayload payload) {
         var targetPlayer = server.getPlayerManager().getPlayer(UUID.fromString(payload.uuid));
 
         assert targetPlayer != null;

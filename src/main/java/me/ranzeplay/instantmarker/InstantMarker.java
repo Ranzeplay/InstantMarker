@@ -29,8 +29,8 @@ public class InstantMarker implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(BroadcastLocationPayload.ID, BroadcastLocationPayload.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SuggestLocationPayload.ID, (payload, context)
-                -> PositionBroadcast.BroadcastLocation(context.server(), context.player(), payload));
+                -> PositionBroadcast.broadcastLocation(context.server(), context.player(), payload));
         ServerPlayNetworking.registerGlobalReceiver(SuggestPlayerPayload.ID, (payload, context)
-                -> PositionBroadcast.BroadcastPlayer(context.server(), context.player(), payload));
+                -> PositionBroadcast.broadcastPlayer(context.server(), context.player(), payload));
     }
 }
