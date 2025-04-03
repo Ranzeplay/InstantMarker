@@ -20,6 +20,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
+import java.util.Vector;
 
 public class PositionMarking {
     public static void MarkPointedPosition() {
@@ -80,7 +82,7 @@ public class PositionMarking {
             dimensionKey = dimension.get().getValue().toTranslationKey();
         }
 
-        var packet = new SuggestLocationPayload(player.getDisplayName().getString(), blockPos, transformedNearbyItems, biomeKey, dimensionKey);
+        var packet = new SuggestLocationPayload(Objects.requireNonNull(player.getDisplayName()).getString(), blockPos, transformedNearbyItems, biomeKey, dimensionKey);
         if (InstantMarkerClient.config.localMode) {
             // Send internally when local mode enabled
             ReceiveMarker(MinecraftClient.getInstance(), new BroadcastLocationPayload(packet));
@@ -132,7 +134,7 @@ public class PositionMarking {
             }
 
             // Remove duplicated
-            InstantMarkerClient.existingMarkers = new ArrayList<>(new HashSet<>(InstantMarkerClient.existingMarkers));
+            InstantMarkerClient.existingMarkers = new Vector<>(new HashSet<>(InstantMarkerClient.existingMarkers));
         }
     }
 
@@ -160,7 +162,7 @@ public class PositionMarking {
             }
 
             // Remove duplicated
-            InstantMarkerClient.existingMarkers = new ArrayList<>(new HashSet<>(InstantMarkerClient.existingMarkers));
+            InstantMarkerClient.existingMarkers = new Vector<>(new HashSet<>(InstantMarkerClient.existingMarkers));
         }
     }
 }

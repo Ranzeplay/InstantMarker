@@ -13,13 +13,13 @@ import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Vector;
 
 public class InstantMarkerClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
 
-    public static ArrayList<BlockBroadcastPacket> existingMarkers = new ArrayList<>();
+    public static Vector<BlockBroadcastPacket> existingMarkers = new Vector<>();
     public static HashSet<String> mutedPlayers = new HashSet<>();
 
     public static Instant LastMarkingTime = Instant.now();
