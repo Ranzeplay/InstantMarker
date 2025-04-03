@@ -31,9 +31,9 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.16.9",
+    "fabricloader": ">=0.16.10",
     "minecraft": "~1.21",
-    "owo": ">=0.12.15",
+    "owo": ">=0.12.20",
     "java": ">=21"
   },
   "suggests": {

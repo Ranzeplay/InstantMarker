@@ -38,7 +38,7 @@ public class PositionBroadcast {
         // Add nearby items when it enabled
         if (payload.isWithNearbyItems()) {
             for (var item : nearbyItems) {
-                transformedNearbyItems.add(new BroadcastItem(item.getStack().getTranslationKey(), item.getStack().getCount()));
+                transformedNearbyItems.add(new BroadcastItem(item.getStack().getItem().getTranslationKey(), item.getStack().getCount()));
             }
         }
 

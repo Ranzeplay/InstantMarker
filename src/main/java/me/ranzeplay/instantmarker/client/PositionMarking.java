@@ -34,17 +34,17 @@ public class PositionMarking {
             var blockPos = ((BlockHitResult) hit).getBlockPos();
             var block = player.getWorld().getBlockState(blockPos).getBlock();
 
-            player.sendMessage(LocalizationManager.SelfMarkBlock(block, blockPos));
+            player.sendMessage(LocalizationManager.SelfMarkBlock(block, blockPos), false);
 
             markPosition(blockPos);
         } else if (hit.getType() == HitResult.Type.ENTITY) {
             var entity = ((EntityHitResult) hit).getEntity();
 
-            player.sendMessage(LocalizationManager.SelfMarkEntity(entity));
+            player.sendMessage(LocalizationManager.SelfMarkEntity(entity), false);
 
             markPosition(entity.getBlockPos());
         } else {
-            player.sendMessage(Text.translatable("chat.instantmarker.mark_too_far").formatted(Formatting.RED));
+            player.sendMessage(Text.translatable("chat.instantmarker.mark_too_far").formatted(Formatting.RED), false);
         }
     }
 
@@ -66,7 +66,7 @@ public class PositionMarking {
         // Add nearby items when it enabled
         if (InstantMarkerClient.config.shareItems) {
             for (var item : nearbyItems) {
-                transformedNearbyItems.add(new BroadcastItem(item.getStack().getTranslationKey(), item.getStack().getCount()));
+                transformedNearbyItems.add(new BroadcastItem(item.getStack().getItem().getTranslationKey(), item.getStack().getCount()));
             }
         }
 
@@ -111,18 +111,18 @@ public class PositionMarking {
             // Show nearby items
             var nearbyItems = payload.getNearbyItems();
             if (!nearbyItems.isEmpty()) {
-                player.sendMessage(Text.translatable("chat.instantmarker.nearby_items").formatted(Formatting.BOLD, Formatting.AQUA));
+                player.sendMessage(Text.translatable("chat.instantmarker.nearby_items").formatted(Formatting.BOLD, Formatting.AQUA), false);
                 for (var item : nearbyItems) {
                     var translatedBlockName = Text.translatable(item.getTranslationKey());
-                    player.sendMessage(translatedBlockName.append(" x").append(String.valueOf(item.getCount())));
+                    player.sendMessage(translatedBlockName.append(" x").append(String.valueOf(item.getCount())), false);
                 }
             }
 
             // Show biome if present
             if (!payload.getBiomeKey().isEmpty()) {
                 var biome = Text.translatable(payload.getBiomeKey());
-                player.sendMessage(Text.translatable("chat.instantmarker.biome").formatted(Formatting.BOLD, Formatting.AQUA));
-                player.sendMessage(biome);
+                player.sendMessage(Text.translatable("chat.instantmarker.biome").formatted(Formatting.BOLD, Formatting.AQUA), false);
+                player.sendMessage(biome, false);
             }
 
             // Save marker
